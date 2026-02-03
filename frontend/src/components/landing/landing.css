@@ -1,0 +1,76 @@
+/* Full screen container */
+.landing-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #025329, #06ae4e);
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* Card in the center */
+  .landing-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    padding: 60px 50px;
+    border-radius: 25px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+  }
+  
+  /* Title & subtitle */
+  .landing-title {
+    font-size: 3rem;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  
+  .landing-subtitle {
+    font-size: 1.2rem;
+    color: #f3f4f6;
+    margin-bottom: 40px;
+  }
+  
+  /* Buttons container */
+  .landing-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  /* Buttons */
+  .btn-login, .btn-register {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 140px;
+  }
+  
+  .btn-login {
+    background-color: #ffffff;
+    color: #3b82f6;
+  }
+  
+  .btn-login:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .btn-register {
+    background-color: transparent;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+  }
+  
+  .btn-register:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
