@@ -10,6 +10,8 @@
   
     padding: 20px;
     box-sizing: border-box;
+
+    position: relative;
   }
   
   /* Card */
@@ -71,4 +73,96 @@
     .home-title {
       font-size: 1.8rem;
     }
+  }
+
+  /* ============================= */
+/* Profile dropdown (NEW FEATURE) */
+/* ============================= */
+
+/* top-right container */
+.home-top-right {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+  }
+  
+  /* wrapper for dropdown positioning */
+  .profile-wrap {
+    position: relative;
+  }
+  
+  /* circular profile button */
+  .profile-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+  
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    cursor: pointer;
+    padding: 0;
+  
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+  }
+  
+  /* PNG icon inside the button */
+  .profile-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    pointer-events: none;
+  }
+  
+  /* dropdown menu */
+  .profile-menu {
+    position: absolute;
+    top: 52px;
+    right: 0;
+  
+    width: 200px;
+    padding: 10px;
+  
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(16px);
+  
+    border-radius: 14px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+  }
+  
+  /* dropdown items */
+  .profile-item {
+    width: 100%;
+    text-align: left;
+  
+    background: transparent;
+    border: none;
+  
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+  
+    font-weight: 800;
+    cursor: pointer;
+  }
+  
+  .profile-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+  
+  /* divider line */
+  .profile-divider {
+    height: 1px;
+    margin: 8px 2px;
+    background: rgba(255, 255, 255, 0.22);
+  }
+  
+  /* logout emphasis */
+  .profile-item.danger {
+    color: #ffe4e6;
   }

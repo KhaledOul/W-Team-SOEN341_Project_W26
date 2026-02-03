@@ -7,7 +7,7 @@ import Landing from "./components/landing";
 import Login from "./components/auth/login";
 import Register from "./components/auth/register";
 import Home from "./components/home";
-import Profile from "./components/profile";
+import MealPreferences from "./components/mealpreferences";
 
 export default function App() {
   const routesElement = useRoutes([
@@ -15,7 +15,7 @@ export default function App() {
     { path: "/login", element: <Login /> },
     { path: "/register", element: <Register /> },
     { path: "/home", element: <Home /> },
-    { path: "/profile", element: <Profile /> },
+    { path: "/mealpreferences", element: <MealPreferences /> },
 
     // TEMP DEBUG: if you get redirected to /home, you'll see this
     //{ path: "/home", element: <div style={{ fontSize: 30 }}>HOME ROUTE HIT ✅</div> },
