@@ -1,17 +1,25 @@
+import './Landing.css';
 import { Link } from "react-router-dom";
 
 export default function Landing() {
   return (
-    <div>
-      <h1>Welcome</h1>
+    <div className="landing-container">
+      <div className="landing-card">
+        <h1 className="landing-title">Welcome</h1>
+        <p className="landing-subtitle">
+          Start your journey with W team by logging in or creating an account.
+        </p>
 
-      <Link to="/login">
-        <button>Login</button>
-      </Link>
+        <div className="landing-buttons">
+          <Link to="/login">
+            <button className="btn-login">Login</button>
+          </Link>
 
-      <Link to="/register">
-        <button>Register</button>
-      </Link>
+          <Link to="/register">
+            <button className="btn-register">Register</button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

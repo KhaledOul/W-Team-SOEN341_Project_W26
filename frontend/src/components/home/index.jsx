@@ -1,21 +1,37 @@
 import React from "react";
 import { useAuth } from "../../contexts/authContext";
+import "./home.css";
 
 const Home = () => {
   const { currentUser } = useAuth();
 
   if (!currentUser) {
     return (
-      <div className="text-2xl font-bold pt-14">
-        Not logged in.
+      <div className="home-page">
+        <div className="home-card">
+          <div className="home-logged-out">
+            You are not logged in.
+          </div>
+        </div>
       </div>
     );
   }
 
+  const name = currentUser.displayName || currentUser.email;
+
   return (
-    <div className="text-2xl font-bold pt-14">
-      Hello {currentUser.displayName ? currentUser.displayName : currentUser.email},
-      you are now logged in.
+    <div className="home-page">
+      <div className="home-card">
+        {/* Big text */}
+        <h1 className="home-title">
+          Hello, {name} 👋
+        </h1>
+
+        {/* Small text */}
+        <p className="home-message">
+          Welcome to <strong>W Team Meal Preps</strong>
+        </p>
+      </div>
     </div>
   );
 };
