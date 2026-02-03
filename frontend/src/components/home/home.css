@@ -4,8 +4,6 @@
     width: 100vw;
   
     display: flex;
-    align-items: center;
-    justify-content: center;
   
     background: linear-gradient(135deg, #025329, #06ae4e);
     font-family: Arial, sans-serif;

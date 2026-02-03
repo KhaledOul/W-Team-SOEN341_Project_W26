@@ -5,6 +5,7 @@ import {
   doSignInWithGoogle,
 } from "../../../firebase/auth";
 import { useAuth } from "../../../contexts/authContext";
+import Header from "../../header";
 
 import "./login.css";
 

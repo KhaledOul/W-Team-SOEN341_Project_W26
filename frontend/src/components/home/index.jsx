@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "../../contexts/authContext";
 import "./home.css";
+import Header from "../header";
 
 const Home = () => {
   const { currentUser } = useAuth();
@@ -20,17 +21,19 @@ const Home = () => {
   const name = currentUser.displayName || currentUser.email;
 
   return (
-    <div className="home-page">
-      <div className="home-card">
-        {/* Big text */}
-        <h1 className="home-title">
-          Hello, {name} 👋
-        </h1>
+    <div>
+      <Header></Header>
 
-        {/* Small text */}
-        <p className="home-message">
-          Welcome to <strong>W Team Meal Preps</strong>
-        </p>
+      
+
+      <div className="home-page">
+        <div>
+          <h1 className="home-title">
+            Hello, {name} 👋
+          </h1>
+        </div>
+
+        
       </div>
     </div>
   );
