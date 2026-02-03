@@ -1,5 +1,6 @@
 import React from "react";
 import { useAuth } from "../../contexts/authContext";
+import ProfileDropdown from "../profile"; 
 import "./home.css";
 
 const Home = () => {
@@ -21,6 +22,10 @@ const Home = () => {
 
   return (
     <div className="home-page">
+        <div className="home-top-right"> {/* ✅ added top-right container */}
+        <ProfileDropdown />              {/* ✅ added profile dropdown */}
+      </div>
+
       <div className="home-card">
         {/* Big text */}
         <h1 className="home-title">
