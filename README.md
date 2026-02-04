@@ -12,3 +12,15 @@ MealMajor is a web app for students to plan meals, track groceries, and propose 
 - Guyass Rozybakiev 40257733
 - Huu Tin Pham 40299195
 
+# Task Separation Brouillon:
+Sprint #1:
+- Jacob & Khaled -> Authetification, routing
+- Guyass -> Profile management
+- Tin & Deep -> User stories and tasks
+- Jing -> Sprint plan
+
+Sprint #2 TENTATIVE task separation
+- Recipe management
+    - Create/edit/delete recipes (Jacob)
+    - Search recipes (Khaled)
+    - Filter recipes (Tin & Deep)
