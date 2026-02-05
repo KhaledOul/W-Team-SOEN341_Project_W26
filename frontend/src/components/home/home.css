@@ -4,8 +4,11 @@
     width: 100vw;
   
     display: flex;
+<<<<<<< HEAD
     justify-content: center;
     align-items: center;
+=======
+>>>>>>> main
   
     background: linear-gradient(135deg, #025329, #06ae4e);
     font-family: Arial, sans-serif;
@@ -18,7 +21,11 @@
   
   /* Card */
   .home-card {
+<<<<<<< HEAD
     width: 100vw;
+=======
+    width: 100%;
+>>>>>>> main
     max-width: 600px;
   
     background: rgba(255, 255, 255, 0.15);

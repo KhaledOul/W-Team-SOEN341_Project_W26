@@ -23,8 +23,13 @@ const Home = () => {
 
   return (
     <div className="home-page">
+<<<<<<< HEAD
         <div className="home-top-right"> {}
         <ProfileDropdown />              {}
+=======
+        <div className="home-top-right"> {/* ✅ added top-right container */}
+        <ProfileDropdown />              {/* ✅ added profile dropdown */}
+>>>>>>> main
       </div>
 
       <div className="home-card">
