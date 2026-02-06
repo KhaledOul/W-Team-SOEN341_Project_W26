@@ -116,7 +116,7 @@ const Login = () => {
           }`}
         >
         <img
-            src="/src/assets/google.png"   // 👈 replace with your actual PNG path
+            src="/src/assets/google.png"   
             alt="Google logo"
             className="google-icon"
         />

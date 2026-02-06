@@ -17,8 +17,7 @@ export default function App() {
     { path: "/home", element: <Home /> },
     { path: "/mealpreferences", element: <MealPreferences /> },
 
-    // TEMP DEBUG: if you get redirected to /home, you'll see this
-    //{ path: "/home", element: <div style={{ fontSize: 30 }}>HOME ROUTE HIT ✅</div> },
+  
 
     { path: "*", element: <Landing /> },
   ]);
