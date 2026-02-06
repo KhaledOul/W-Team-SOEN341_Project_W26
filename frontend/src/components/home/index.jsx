@@ -1,11 +1,13 @@
 import React from "react";
 import { useAuth } from "../../contexts/authContext";
+import { useNavigate } from "react-router-dom";
 import ProfileDropdown from "../profile"; 
 import "./home.css";
 import Header from "../header";
 
 const Home = () => {
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   if (!currentUser) {
     return (
@@ -23,16 +25,11 @@ const Home = () => {
 
   return (
     <div className="home-page">
-<<<<<<< HEAD
-        <div className="home-top-right"> {}
-        <ProfileDropdown />              {}
-=======
-        <div className="home-top-right"> {/* ✅ added top-right container */}
-        <ProfileDropdown />              {/* ✅ added profile dropdown */}
->>>>>>> main
+        <div className="home-top-right"> 
+        <ProfileDropdown />              
       </div>
-
-      <div className="home-card">
+      <div className="home-wrapper">
+        <div className="home-card">
         {/* Big text */}
         <h1 className="home-title">
           Hello, {name} 👋
@@ -42,6 +39,20 @@ const Home = () => {
         <p className="home-message">
           Welcome to <strong>W Team Meal Preps</strong>
         </p>
+      </div>
+      
+          
+          {/* Options buttons */}
+        <div className="home-options-outside">
+          <button 
+          className="home-btn meal"
+          onClick={() => navigate("/mealpreferences")}
+          >
+            Meal Preferences
+          </button>
+          <button className="home-btn recipes">Recipes</button>
+          <button className="home-btn shopping">Week Planner</button>
+        </div>
       </div>
     </div>
   );
