@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 // Analytics is optional (safe to remove). If you want it, keep it:
 import { getAnalytics } from "firebase/analytics";
 
@@ -17,6 +18,9 @@ const app = initializeApp(firebaseConfig);
 
 // ✅ Auth
 export const auth = getAuth(app);
+
+// ✅ Firestore
+export const db = getFirestore(app);
 
 // ✅ Optional analytics (works only in browser + correct setup)
 export const analytics = getAnalytics(app);

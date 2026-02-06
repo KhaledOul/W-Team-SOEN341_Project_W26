@@ -1,0 +1,150 @@
+.meal-preferences-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+  }
+  
+  .profile-dropdown-wrapper {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 1000;
+  }
+  
+  .preferences-card {
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    padding: 2rem 2.5rem;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .preferences-card h1 {
+    font-size: 1.8em;
+    margin-bottom: 0.3rem;
+    color: rgba(255, 255, 255, 0.87);
+  }
+  
+  .preferences-card .subtitle {
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 1.5rem;
+    font-size: 0.9em;
+  }
+  
+  .user-greeting {
+    color: #14532d;
+    font-size: 1.1em;
+    margin-bottom: 1.2rem;
+    font-weight: 500;
+  }
+  
+  .preference-section {
+    margin-bottom: 1.5rem;
+  }
+  
+  .preference-section h3 {
+    font-size: 1.1em;
+    margin-bottom: 0.8rem;
+    color: rgba(255, 255, 255, 0.87);
+    text-align: left;
+  }
+  
+  .options-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    text-align: left;
+  }
+  
+  .option-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+  }
+  
+  .option-item:hover {
+    background-color: rgba(20, 83, 45, 0.15);
+  }
+  
+  .option-item input[type="radio"],
+  .option-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #14532d;
+  }
+  
+  .option-item label {
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.87);
+    font-size: 0.95em;
+    flex: 1;
+  }
+  
+  .save-button {
+    width: 100%;
+    margin-top: 1.2rem;
+    padding: 0.7em 1.5em;
+    font-size: 1em;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background-color: #14532d;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  
+  .save-button:hover {
+    background-color: #166534;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(20, 83, 45, 0.4);
+  }
+  
+  .save-button:active {
+    transform: translateY(0);
+  }
+  
+  @media (prefers-color-scheme: light) {
+    .preferences-card {
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+  
+    .preferences-card h1,
+    .preference-section h3,
+    .option-item label {
+      color: #213547;
+    }
+  
+    .preferences-card .subtitle {
+      color: #666;
+    }
+  
+    .user-greeting {
+      color: #14532d;
+    }
+  
+    .option-item:hover {
+      background-color: rgba(20, 83, 45, 0.08);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .options-group {
+      grid-template-columns: 1fr;
+    }
+    
+    .profile-dropdown-wrapper {
+      top: 1rem;
+      right: 1rem;
+    }
+  }
