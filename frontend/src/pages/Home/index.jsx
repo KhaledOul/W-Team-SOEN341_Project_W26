@@ -1,10 +1,9 @@
 import React from "react";
-import { useAuth } from "../../contexts/authContext";
+import { useAuth } from "../../context/authContext";
 import { useNavigate } from "react-router-dom";
-import ProfileDropdown from "../profile"; 
+import ProfileDropdown from "../Profile";
 import "./home.css";
-import Header from "../header";
-
+import Header from "../../components/header";
 const Home = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();

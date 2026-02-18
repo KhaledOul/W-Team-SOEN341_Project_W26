@@ -1,13 +1,13 @@
 
 
 import { useRoutes } from "react-router-dom";
-import { AuthProvider } from "./contexts/authContext";
+import { AuthProvider } from "./context/authContext";
 
-import Landing from "./components/landing";
-import Login from "./components/auth/login";
-import Register from "./components/auth/register";
-import Home from "./components/home";
-import MealPreferences from "./components/mealpreferences";
+import Landing from "./pages/Landing";
+import Login from "./features/auth/login";
+import Register from "./features/auth/register";
+import Home from "./pages/Home";
+import MealPreferences from "./pages/MealPreferences";
 
 export default function App() {
   const routesElement = useRoutes([
