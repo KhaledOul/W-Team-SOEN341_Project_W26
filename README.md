@@ -11,6 +11,7 @@ MealMajor is a web app for students to plan meals, track groceries, and propose 
 - Deep Patel 40312461
 - Guyass Rozybakiev 40257733
 - Huu Tin Pham 40299195
+- Jingyu Zeng 40112783
 
 # Task Separation Brouillon:
 Sprint #1:

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { doSignOut } from "../../firebase/auth";
+import { doSignOut } from "../../services/firebase/auth";
 
 const ProfileDropdown = () => {
   const [open, setOpen] = useState(false); // dropdown open/close state

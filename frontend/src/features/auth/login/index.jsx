@@ -3,9 +3,9 @@ import { Navigate, Link } from "react-router-dom";
 import {
   doSignInWithEmailAndPassword,
   doSignInWithGoogle,
-} from "../../../firebase/auth";
-import { useAuth } from "../../../contexts/authContext";
-import Header from "../../header";
+} from "../../../services/firebase/auth";
+import { useAuth } from "../../../context/authContext";
+import Header from "../../../components/header";
 
 import "./login.css";
 

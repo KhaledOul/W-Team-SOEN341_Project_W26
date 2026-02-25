@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "../../firebase/firebase";
-import { useAuth } from "../../contexts/authContext";
+import { db } from "../../services/firebase/firebase";
+import { useAuth } from "../../context/authContext";
 import "./mealpreferences.css";
-import ProfileDropdown from "../profile";
+import ProfileDropdown from "../Profile";
 
 const DIET_OPTIONS = ["Vegan", "Halal", "Kosher", "Pescatarian", "Keto", "Vegetarian"];
 const ALLERGY_OPTIONS = ["Peanuts", "Dairy", "Gluten", "Shellfish", "Soy", "Nuts"];
