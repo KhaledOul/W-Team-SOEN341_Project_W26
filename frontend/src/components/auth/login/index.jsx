@@ -9,6 +9,23 @@ import Header from "../../header";
 
 import "./login.css";
 
+const mapFirebaseErrorToMessage = (error) => {
+  if (!error?.code) return "Failed to sign in.";
+
+  switch (error.code) {
+    case "auth/invalid-email":
+      return "The email address is invalid.";
+    case "auth/user-not-found":
+    case "auth/wrong-password":
+      return "Incorrect email or password. Please try again.";
+    case "auth/user-disabled":
+      return "This account has been disabled.";
+    case "auth/popup-closed-by-user":
+      return "Google sign-in was cancelled.";
+    default:
+      return "An error occurred during sign-in. Please try again.";
+  }
+};
 const Login = () => {
   const authCtx = useAuth?.() || null;
   const userLoggedIn = authCtx?.userLoggedIn ?? false;
@@ -28,7 +45,7 @@ const Login = () => {
     try {
       await doSignInWithEmailAndPassword(email, password);
     } catch (err) {
-      setErrorMessage(err?.message || "Failed to sign in.");
+      setErrorMessage(mapFirebaseErrorToMessage(err));
       setIsSigningIn(false);
     }
   };
@@ -43,7 +60,7 @@ const Login = () => {
     try {
       await doSignInWithGoogle();
     } catch (err) {
-      setErrorMessage(err?.message || "Google sign-in failed.");
+      setErrorMessage(mapFirebaseErrorToMessage(err));
       setIsSigningIn(false);
     }
   };
