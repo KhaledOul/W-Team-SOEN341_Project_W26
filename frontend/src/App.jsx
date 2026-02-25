@@ -1,7 +1,8 @@
 
-
+import React from "react"; 
 import { useRoutes } from "react-router-dom";
 import { AuthProvider } from "./context/authContext";
+
 
 import Landing from "./pages/Landing";
 import Login from "./features/auth/login";
