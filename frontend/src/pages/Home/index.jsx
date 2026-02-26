@@ -49,7 +49,12 @@ const Home = () => {
           >
             Meal Preferences
           </button>
-          <button className="home-btn recipes">Recipes</button>
+          <button 
+          className="home-btn recipes"
+          onClick={() => navigate("/recipes")}
+          >
+            Recipes
+          </button>
           <button className="home-btn shopping">Week Planner</button>
         </div>
       </div>
