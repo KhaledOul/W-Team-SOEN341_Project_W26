@@ -74,3 +74,11 @@ function buildPredicate(filters = {}, options = {}) {
     return true;
   };
 }
+
+export function filterRecipes(recipes = [], filters = {}, options = {}) {
+  if (!Array.isArray(recipes)) return [];
+  const predicate = buildPredicate(filters, options);
+  return recipes.filter(predicate);
+}
+
+export default filterRecipes;
