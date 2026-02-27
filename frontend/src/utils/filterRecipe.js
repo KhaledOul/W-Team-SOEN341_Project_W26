@@ -56,3 +56,21 @@ function buildPredicate(filters = {}, options = {}) {
       const r = normalizeString(recipe[attrMap.cost], caseSensitive);
       if (!costFilter.includes(r)) return false;
     }
+
+        // DIETARY TAGS
+    if (dietaryFilter.length) {
+      const rTags = toArray(recipe[attrMap.dietaryTags]).map(t => normalizeString(t, caseSensitive));
+      if (matchAllDietaryTags) {
+        // require every filter tag to exist on the recipe
+        const allPresent = dietaryFilter.every(tag => rTags.includes(tag));
+        if (!allPresent) return false;
+      } else {
+        // require at least one tag to match
+        const anyPresent = dietaryFilter.some(tag => rTags.includes(tag));
+        if (!anyPresent) return false;
+      }
+    }
+
+    return true;
+  };
+}
