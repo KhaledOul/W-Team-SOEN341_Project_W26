@@ -9,7 +9,6 @@ function normalizeString(s, caseSensitive) {
 }
 
  // Build a predicate function for one recipe using filters and options
-
 function buildPredicate(filters = {}, options = {}) {
   const {
     attrMap = {
