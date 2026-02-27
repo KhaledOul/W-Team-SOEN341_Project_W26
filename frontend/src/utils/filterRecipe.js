@@ -65,7 +65,7 @@ function buildPredicate(filters = {}, options = {}) {
         const allPresent = dietaryFilter.every(tag => rTags.includes(tag));
         if (!allPresent) return false;
       } else {
-        // require at least one tag to match
+        
         const anyPresent = dietaryFilter.some(tag => rTags.includes(tag));
         if (!anyPresent) return false;
       }
