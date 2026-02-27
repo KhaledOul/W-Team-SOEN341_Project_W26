@@ -12,178 +12,193 @@
 }
 
 .recipe-form-container {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  max-width: 700px;
-  width: 90%;
-  max-height: 85vh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  max-width: 720px;
+  max-height: 85vh;            /* KEY */
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+
+  display: flex;               /* KEY */
+  flex-direction: column;      /* KEY */
 }
 
+/* HEADER */
 .form-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 24px;
-  border-bottom: 1px solid #e0e0e0;
+  justify-content: space-between;
+
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;              /* KEY */
 }
 
 .form-header h2 {
   margin: 0;
-  font-size: 24px;
-  color: #333;
+  font-size: 20px;
+  color: #222;
 }
 
+/* CLOSE BUTTON */
 .close-btn {
-  background: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   border: none;
-  font-size: 28px;
-  color: #999;
   cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s ease;
+
+  background: #f5f5f5;
+  color: #222;
+  font-size: 22px;
+  line-height: 1;
+  transition: 0.2s ease;
 }
 
 .close-btn:hover {
-  background-color: #f0f0f0;
-  color: #333;
+  background: #eaeaea;
 }
 
-form {
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  flex: 1;
-  overflow-y: auto;
+/* FORM BODY (scrolls) */
+.recipe-form-container form {
+  padding: 16px 20px 20px 20px;
+  overflow-y: auto;            /* KEY */
 }
 
+/* FORM */
 .form-group {
-  margin-bottom: 0;
-  width: 100%;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  width: 100%;
+  margin-bottom: 12px;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  font-weight: 500;
-  color: #333;
+  font-weight: 700;
+  color: #222;
   font-size: 14px;
 }
 
+/* INPUTS */
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
   width: 100%;
-  padding: 10px 12px;
+  padding: 11px 13px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 10px;
   font-size: 14px;
-  font-family: inherit;
-  transition: border-color 0.2s ease;
+  outline: none;
   box-sizing: border-box;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: #4caf50;
-  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+.form-group textarea {
+  resize: vertical;
+  min-height: 90px;
 }
 
-.form-group input.error,
-.form-group textarea.error {
-  border-color: #f44336;
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.12);
+}
+
+/* ROWS */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* CHECKBOX CHIPS */
+.prefs-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pref-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 14px;
+  border: 1px solid #e7e7e7;
+  border-radius: 999px;
+  background: #fafafa;
+
+  cursor: pointer;
+  user-select: none;
+  transition: 0.15s ease;
+}
+
+.pref-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: #4caf50;
+}
+
+.pref-check:hover {
+  background: #f0fff3;
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+/* ERRORS */
+.error {
+  border-color: #e53935 !important;
+  box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.12) !important;
 }
 
 .error-message {
   display: block;
-  color: #f44336;
+  margin-top: 6px;
   font-size: 12px;
-  margin-top: 4px;
+  color: #e53935;
+  font-weight: 600;
 }
 
+/* ACTIONS (sticky-ish at bottom inside form scroll) */
 .form-actions {
   display: flex;
-  gap: 12px;
   justify-content: flex-end;
-  margin-top: auto;
-  padding-top: 16px;
-  border-top: 1px solid #e0e0e0;
-  flex-shrink: 0;
-}
-
-.btn-cancel,
-.btn-submit {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid #f1f1f1;
 }
 
 .btn-cancel {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-.btn-cancel:hover {
-  background-color: #e0e0e0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-weight: 700;
 }
 
 .btn-submit {
-  background-color: #4caf50;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  background: #4caf50;
   color: white;
+  cursor: pointer;
+  font-weight: 800;
 }
 
 .btn-submit:hover {
-  background-color: #45a049;
+  background: #3e8e41;
 }
 
-.btn-submit:active {
-  transform: scale(0.98);
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-
+/* MOBILE */
+@media (max-width: 700px) {
   .recipe-form-container {
-    width: 98%;
+    max-width: 100%;
     max-height: 90vh;
   }
 
-  form {
-    padding: 16px;
-    gap: 12px;
-  }
-
-  .form-header {
-    padding: 16px;
-  }
-
-  .form-group input,
-  .form-group textarea {
-    padding: 8px 10px;
-    font-size: 16px;
+  .form-row {
+    grid-template-columns: 1fr;
   }
 }

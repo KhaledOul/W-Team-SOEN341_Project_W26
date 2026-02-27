@@ -1,66 +1,81 @@
+// src/features/recipes/card/index.jsx (replace entire file)
+// Updated to show new fields (Title, Author, Difficulty, Diet, Allergies, Time, Cost)
 import React from "react";
 import "./card.css";
 
-// Displays one recipe card
 export default function RecipeCard({ recipe, onEdit, onDelete }) {
+  const title = recipe.title ?? recipe.name ?? "Untitled";
+  const time = recipe.time ?? recipe.preparationTime ?? "";
+  const stepsText = recipe.steps ?? recipe.preparationSteps ?? "";
+  const diet = recipe.diet ?? recipe.dietaryPreferences ?? recipe.mealPreferences ?? [];
+  const allergies = recipe.allergies ?? [];
 
-    // Get first 3 ingredients for preview
-  const ingredientsList = recipe.ingredients
+  const ingredientsList = (recipe.ingredients || "")
     .split("\n")
     .filter((item) => item.trim())
     .slice(0, 3);
 
-    // Check if there are more ingredients
   const hasMoreIngredients =
-    recipe.ingredients.split("\n").filter((item) => item.trim()).length > 3;
+    (recipe.ingredients || "").split("\n").filter((item) => item.trim()).length > 3;
 
-    // Get first 2 steps for preview
-  const stepsList = recipe.preparationSteps
+  const stepsList = (stepsText || "")
     .split("\n")
     .filter((item) => item.trim())
     .slice(0, 2);
 
   return (
     <div className="recipe-card">
-
-        {/* Header: name + action buttons */}
       <div className="recipe-header">
-        <h3>{recipe.name}</h3>
+        <h3>{title}</h3>
         <div className="recipe-actions">
-          <button
-            className="btn-edit"
-            onClick={() => onEdit(recipe.id)}
-            title="Edit recipe"
-          >
+          <button className="btn-edit" onClick={() => onEdit(recipe.id)} title="Edit recipe">
             ✏️
           </button>
-          <button
-            className="btn-delete"
-            onClick={() => onDelete(recipe.id)}
-            title="Delete recipe"
-          >
+          <button className="btn-delete" onClick={() => onDelete(recipe.id)} title="Delete recipe">
             🗑️
           </button>
         </div>
       </div>
 
-        {/* Recipe Info */}
       <div className="recipe-meta">
-
-        {/* Preparation Time */}
         <div className="meta-item">
-          <span className="meta-label">⏱️ Time:</span>
-          <span className="meta-value">{recipe.preparationTime} min</span>
+          <span className="meta-label">👤 Author:</span>
+          <span className="meta-value">{recipe.author || "—"}</span>
         </div>
 
-        {/* Cost */}
+        <div className="meta-item">
+          <span className="meta-label">⭐ Difficulty:</span>
+          <span className="meta-value">{recipe.difficulty || "—"}</span>
+        </div>
+
+        <div className="meta-item">
+          <span className="meta-label">⏱️ Time:</span>
+          <span className="meta-value">{time !== "" ? `${time} min` : "—"}</span>
+        </div>
+
         <div className="meta-item">
           <span className="meta-label">💰 Cost:</span>
-          <span className="meta-value">${parseFloat(recipe.cost).toFixed(2)}</span>
+          <span className="meta-value">
+            ${Number(recipe.cost || 0).toFixed(2)}
+          </span>
         </div>
       </div>
 
-        {/* Ingredients preview */}
+      {(diet.length > 0 || allergies.length > 0) && (
+        <div className="recipe-tags">
+          {diet.map((d) => (
+            <span key={`diet-${d}`} className="tag tag-diet">
+              {d}
+            </span>
+          ))}
+          {allergies.map((a) => (
+            <span key={`allergy-${a}`} className="tag tag-allergy">
+              {a}
+            </span>
+          ))}
+        </div>
+      )}
+
       <div className="recipe-section">
         <h4>Ingredients</h4>
         <ul className="ingredients-list">
@@ -71,24 +86,19 @@ export default function RecipeCard({ recipe, onEdit, onDelete }) {
         </ul>
       </div>
 
-        {/* Steps preview */}
       <div className="recipe-section">
-        <h4>Preparation Steps</h4>
-        <p className="steps-preview">
+        <h4>Steps</h4>
+        <div className="steps-preview">
           {stepsList.map((step, index) => (
             <div key={index} className="step-item">
               {index + 1}. {step.trim().substring(0, 80)}
               {step.trim().length > 80 ? "..." : ""}
             </div>
           ))}
-        </p>
+        </div>
       </div>
 
-        {/* View full recipe */}
-      <button
-        className="btn-view-details"
-        onClick={() => onEdit(recipe.id)}
-      >
+      <button className="btn-view-details" onClick={() => onEdit(recipe.id)}>
         View Full Recipe
       </button>
     </div>

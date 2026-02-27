@@ -1,211 +1,210 @@
-.recipes-page {
-  width: 100vw;
-  height: 100vh;
-  background: #f5f7fa;
-  padding: 24px;
-  padding-top: 60px;
+/* toolbar (search + filter button) */
+.recipes-toolbar {
   display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-sizing: border-box;
   align-items: center;
-  position: fixed;
-  left: 0;
-  top: 0;
-}
-
-.recipes-header {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  background: white;
-  padding: 20px 24px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  flex-shrink: 0;
+  gap: 12px;
   width: 100%;
   max-width: 1600px;
+  margin-bottom: 16px;
 }
 
-.header-content h1 {
-  margin: 0 0 4px 0;
-  color: #333;
-  font-size: 28px;
+.recipes-search {
+  display: flex;
+  gap: 12px;
+  flex: 1;
 }
 
-.header-content p {
-  margin: 0;
-  color: #999;
+/* Make search a bit wider */
+.search-input {
+  flex: 1;
+  max-width: 520px;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
   font-size: 14px;
+  background: white;
+  color: #333;
+  transition: all 0.2s ease;
 }
 
-.btn-create-recipe {
-  padding: 12px 24px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: 600;
+.btn-filter {
+  padding: 12px 16px;
+  min-width: 110px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;            /* IMPORTANT: fixes “blank button” look */
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
 }
 
-.btn-create-recipe:hover {
-  background-color: #45a049;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-}
-
-.btn-create-recipe:active {
-  transform: scale(0.98);
-}
-
-.recipes-search {
-  margin-bottom: 16px;
-  display: flex;
-  gap: 12px;
-  flex-shrink: 0;
-  width: 100%;
-  max-width: 1600px;
-}
-
-.search-input {
-  flex: 1;
-  max-width: 400px;
-  padding: 12px 16px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  background: white;
-  color: #333;
-  transition: all 0.2s ease;
-}
-
-.search-input:focus {
-  outline: none;
+.btn-filter:hover {
   border-color: #4caf50;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
-.recipes-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  overflow-y: auto;
-  flex: 1;
-  padding-right: 8px;
-  auto-rows: max-content;
+/* filters panel */
+.filters-panel {
   width: 100%;
   max-width: 1600px;
-}
-
-.recipes-grid::-webkit-scrollbar {
-  width: 8px;
-}
-
-.recipes-grid::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.recipes-grid::-webkit-scrollbar-thumb {
-  background: #bbb;
-  border-radius: 4px;
-}
-
-.recipes-grid::-webkit-scrollbar-thumb:hover {
-  background: #999;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 60px 32px;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow-y: auto;
-  width: 100%;
-  max-width: 1600px;
-}
-
-.empty-icon {
-  font-size: 64px;
+  border-radius: 10px;
+  padding: 16px;
   margin-bottom: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eee;
 }
 
-.empty-state h2 {
-  margin: 0 0 8px 0;
+.filters-section + .filters-section {
+  margin-top: 14px;
+}
+
+.filters-title {
+  font-weight: 800;
   color: #333;
-  font-size: 24px;
+  font-size: 14px;
+  margin-bottom: 10px;
 }
 
-.empty-state p {
-  margin: 0 0 28px 0;
+/* Meal preference chips (compact, not huge boxes) */
+.filters-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filter-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #e7e7e7;
+  border-radius: 999px;     /* pill look */
+  cursor: pointer;
+  user-select: none;
+  background: #fff;
+  transition: all 0.15s ease;
+}
+
+/* Hide default checkbox but keep it accessible */
+.filter-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: #4caf50;
+}
+
+/* Optional: nicer “selected” feel */
+.filter-check:has(input:checked) {
+  border-color: rgba(76, 175, 80, 0.5);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.08);
+}
+
+.filter-check span {
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Sort + time inputs */
+.filter-select {
+  width: 280px;
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  color: #333;
+}
+
+.time-range {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-input {
+  width: 160px;
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  color: #333;
+}
+
+.time-sep {
   color: #999;
-  font-size: 16px;
+  font-weight: 800;
 }
 
-/* Responsive */
-@media (max-width: 1400px) {
-  .recipes-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+/* actions */
+.filters-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 14px;
 }
 
+.btn-secondary {
+  padding: 10px 14px;
+  background: #f5f7fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #333;
+}
+
+.btn-primary {
+  padding: 10px 14px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+/* responsive */
 @media (max-width: 768px) {
-  .recipes-page {
-    padding: 16px;
-    padding-top: 60px;
-  }
-
-  .recipes-header {
+  .recipes-toolbar {
     flex-direction: column;
-    gap: 16px;
     align-items: stretch;
-    text-align: center;
-    padding: 16px;
   }
 
-  .btn-create-recipe {
+  .btn-filter {
     width: 100%;
-  }
-
-  .recipes-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
   }
 
   .search-input {
     max-width: 100%;
   }
 
-  .recipes-search {
-    margin-bottom: 20px;
+  .filters-actions {
+    justify-content: stretch;
   }
 
-  .empty-state {
-    padding: 60px 24px;
-  }
-}
-
-@media (max-width: 480px) {
-  .recipes-header {
-    padding: 16px;
+  .btn-secondary,
+  .btn-primary {
+    width: 100%;
   }
 
-  .recipes-page {
-    padding: 12px;
-    padding-top: 60px;
+  .filter-select {
+    width: 100%;
   }
 
-  .recipes-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
+  .filter-input {
+    width: 100%;
+  }
+
+  .time-range {
+    flex-direction: column;
+    align-items: stretch;
   }
 }

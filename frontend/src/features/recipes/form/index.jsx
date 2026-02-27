@@ -1,107 +1,126 @@
-import React, { useState, useEffect } from "react";
+// src/features/recipes/form/index.jsx
+import React, { useEffect, useState } from "react";
 import { useRecipe } from "../../../context/recipeContext";
 import "./form.css";
 
-// Form component (create or edit recipe)
 export default function RecipeForm({ recipeId = null, onClose }) {
   const { createRecipe, updateRecipe, getRecipeById } = useRecipe();
+
+  // Dietary + Allergies options (match your screenshot)
+  const DIETARY_OPTIONS = [
+    "Vegan",
+    "Halal",
+    "Kosher",
+    "Pescatarian",
+    "Keto",
+    "Vegetarian",
+  ];
+
+  const ALLERGY_OPTIONS = ["Peanuts", "Dairy", "Gluten", "Shellfish", "Soy", "Nuts"];
+
+  const DIFFICULTY_OPTIONS = ["Easy", "Medium", "Hard"];
+
   const [formData, setFormData] = useState({
-    name: "",
+    title: "",
+    author: "",
     ingredients: "",
-    preparationTime: "",
-    preparationSteps: "",
+    steps: "",
+    time: "",
     cost: "",
+    difficulty: "Easy",
+    diet: [], // dietary preferences
+    allergies: [], // allergies
   });
+
   const [errors, setErrors] = useState({});
 
   // Load recipe data into form when editing
   useEffect(() => {
-    if (recipeId) {
-      const recipe = getRecipeById(recipeId);
-      if (recipe) {
-        setFormData({
-          name: recipe.name || "",
-          ingredients: recipe.ingredients || "",
-          preparationTime: recipe.preparationTime || "",
-          preparationSteps: recipe.preparationSteps || "",
-          cost: recipe.cost || "",
-        });
-      }
-    }
+    if (!recipeId) return;
+    const recipe = getRecipeById(recipeId);
+    if (!recipe) return;
+
+    setFormData({
+      title: recipe.title ?? recipe.name ?? "",
+      author: recipe.author ?? "",
+      ingredients: recipe.ingredients ?? "",
+      steps: recipe.steps ?? recipe.preparationSteps ?? "",
+      time: recipe.time ?? recipe.preparationTime ?? "",
+      cost: recipe.cost ?? "",
+      difficulty: recipe.difficulty ?? "Easy",
+      diet: recipe.diet ?? recipe.dietaryPreferences ?? recipe.mealPreferences ?? [],
+      allergies: recipe.allergies ?? [],
+    });
   }, [recipeId, getRecipeById]);
 
-  // Validate form inputs
+  const toggleArrayValue = (key, value) => {
+    setFormData((prev) => {
+      const arr = prev[key] || [];
+      const exists = arr.includes(value);
+      return {
+        ...prev,
+        [key]: exists ? arr.filter((v) => v !== value) : [...arr, value],
+      };
+    });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Recipe name is required";
+    if (!formData.title.trim()) newErrors.title = "Title is required";
+    if (!formData.author.trim()) newErrors.author = "Author is required";
+    if (!formData.ingredients.trim()) newErrors.ingredients = "Ingredients are required";
+    if (!formData.steps.trim()) newErrors.steps = "Steps are required";
+
+    if (!String(formData.time).trim() || isNaN(formData.time) || Number(formData.time) <= 0) {
+      newErrors.time = "Time must be a valid number of minutes";
     }
 
-    if (!formData.ingredients.trim()) {
-      newErrors.ingredients = "Ingredients are required";
-    }
-
-    if (!formData.preparationTime.trim()) {
-      newErrors.preparationTime = "Preparation time is required";
-    }
-
-    if (!formData.preparationSteps.trim()) {
-      newErrors.preparationSteps = "Preparation steps are required";
-    }
-
-    if (!formData.cost || isNaN(formData.cost) || parseFloat(formData.cost) < 0) {
+    if (formData.cost === "" || isNaN(formData.cost) || Number(formData.cost) < 0) {
       newErrors.cost = "Cost must be a valid positive number";
     }
+
+    if (!formData.difficulty) newErrors.difficulty = "Difficulty is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Update from when user types
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    // Clear error while typing
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
-    }
-  };
-
-  // Submit form
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
 
-    if (!validateForm()) {
-      return;
-    }
-
-    // Clean data before saving
     const recipeData = {
-      name: formData.name.trim(),
+      title: formData.title.trim(),
+      author: formData.author.trim(),
       ingredients: formData.ingredients.trim(),
-      preparationTime: formData.preparationTime.trim(),
-      preparationSteps: formData.preparationSteps.trim(),
-      cost: parseFloat(formData.cost),
+      steps: formData.steps.trim(),
+      time: Number(formData.time),
+      cost: Number(formData.cost),
+      difficulty: formData.difficulty,
+      diet: formData.diet,
+      allergies: formData.allergies,
     };
 
-    // Edit or Create
-    if (recipeId) {
-      updateRecipe(recipeId, recipeData);
-    } else {
-      createRecipe(recipeData);
-    }
+    if (recipeId) updateRecipe(recipeId, recipeData);
+    else createRecipe(recipeData);
 
     onClose();
   };
 
-  // UI
   return (
     <div className="recipe-form-overlay">
       <div className="recipe-form-container">
@@ -112,25 +131,57 @@ export default function RecipeForm({ recipeId = null, onClose }) {
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit}>
-
-            {/* Recipe Name */}
+          {/* Title */}
           <div className="form-group">
-            <label htmlFor="name">Recipe Name *</label>
+            <label htmlFor="title">Title *</label>
             <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
+              id="title"
+              name="title"
+              value={formData.title}
               onChange={handleChange}
-              placeholder="Enter recipe name"
-              className={errors.name ? "error" : ""}
+              placeholder="Enter recipe title"
+              className={errors.title ? "error" : ""}
             />
-            {errors.name && <span className="error-message">{errors.name}</span>}
+            {errors.title && <span className="error-message">{errors.title}</span>}
           </div>
 
-            {/* Ingredients */}
+          {/* Author */}
+          <div className="form-group">
+            <label htmlFor="author">Author *</label>
+            <input
+              id="author"
+              name="author"
+              value={formData.author}
+              onChange={handleChange}
+              placeholder="Your name"
+              className={errors.author ? "error" : ""}
+            />
+            {errors.author && <span className="error-message">{errors.author}</span>}
+          </div>
+
+          {/* Difficulty */}
+          <div className="form-group">
+            <label htmlFor="difficulty">Difficulty *</label>
+            <select
+              id="difficulty"
+              name="difficulty"
+              value={formData.difficulty}
+              onChange={handleChange}
+              className={errors.difficulty ? "error" : ""}
+            >
+              {DIFFICULTY_OPTIONS.map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
+            </select>
+            {errors.difficulty && (
+              <span className="error-message">{errors.difficulty}</span>
+            )}
+          </div>
+
+          {/* Ingredients */}
           <div className="form-group">
             <label htmlFor="ingredients">Ingredients *</label>
             <textarea
@@ -147,23 +198,36 @@ export default function RecipeForm({ recipeId = null, onClose }) {
             )}
           </div>
 
-            {/* Time + Cost */}
+          {/* Steps */}
+          <div className="form-group">
+            <label htmlFor="steps">Steps *</label>
+            <textarea
+              id="steps"
+              name="steps"
+              value={formData.steps}
+              onChange={handleChange}
+              placeholder="Enter preparation steps"
+              rows="6"
+              className={errors.steps ? "error" : ""}
+            />
+            {errors.steps && <span className="error-message">{errors.steps}</span>}
+          </div>
+
+          {/* Time + Cost */}
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="preparationTime">Preparation Time (minutes) *</label>
+              <label htmlFor="time">Time (minutes) *</label>
               <input
                 type="number"
-                id="preparationTime"
-                name="preparationTime"
-                value={formData.preparationTime}
+                id="time"
+                name="time"
+                value={formData.time}
                 onChange={handleChange}
                 placeholder="e.g., 30"
                 min="1"
-                className={errors.preparationTime ? "error" : ""}
+                className={errors.time ? "error" : ""}
               />
-              {errors.preparationTime && (
-                <span className="error-message">{errors.preparationTime}</span>
-              )}
+              {errors.time && <span className="error-message">{errors.time}</span>}
             </div>
 
             <div className="form-group">
@@ -179,30 +243,45 @@ export default function RecipeForm({ recipeId = null, onClose }) {
                 min="0"
                 className={errors.cost ? "error" : ""}
               />
-              {errors.cost && (
-                <span className="error-message">{errors.cost}</span>
-              )}
+              {errors.cost && <span className="error-message">{errors.cost}</span>}
             </div>
           </div>
 
-            {/* Steps */}
+          {/* Dietary Preferences */}
           <div className="form-group">
-            <label htmlFor="preparationSteps">Preparation Steps *</label>
-            <textarea
-              id="preparationSteps"
-              name="preparationSteps"
-              value={formData.preparationSteps}
-              onChange={handleChange}
-              placeholder="Enter preparation steps"
-              rows="6"
-              className={errors.preparationSteps ? "error" : ""}
-            />
-            {errors.preparationSteps && (
-              <span className="error-message">{errors.preparationSteps}</span>
-            )}
+            <label>Dietary Preferences</label>
+            <div className="prefs-grid">
+              {DIETARY_OPTIONS.map((opt) => (
+                <label key={opt} className="pref-check">
+                  <input
+                    type="checkbox"
+                    checked={formData.diet.includes(opt)}
+                    onChange={() => toggleArrayValue("diet", opt)}
+                  />
+                  <span>{opt}</span>
+                </label>
+              ))}
+            </div>
           </div>
 
-            {/* Buttons */}
+          {/* Allergies */}
+          <div className="form-group">
+            <label>Allergies</label>
+            <div className="prefs-grid">
+              {ALLERGY_OPTIONS.map((opt) => (
+                <label key={opt} className="pref-check">
+                  <input
+                    type="checkbox"
+                    checked={formData.allergies.includes(opt)}
+                    onChange={() => toggleArrayValue("allergies", opt)}
+                  />
+                  <span>{opt}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Buttons */}
           <div className="form-actions">
             <button type="button" className="btn-cancel" onClick={onClose}>
               Cancel

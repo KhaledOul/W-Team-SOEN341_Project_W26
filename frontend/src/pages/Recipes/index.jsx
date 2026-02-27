@@ -1,3 +1,5 @@
+// src/pages/recipes/index.jsx (minimal changes needed for filtering by diet/allergies/time/cost)
+// Replace your whole Recipes page with this if you want filters to match the new fields.
 import React, { useState } from "react";
 import { useRecipe } from "../../context/recipeContext";
 import RecipeCard from "../../features/recipes/card";
@@ -5,68 +7,120 @@ import RecipeForm from "../../features/recipes/form";
 import ConfirmationModal from "../../features/recipes/confirmationModal";
 import "./recipes.css";
 
-// Main Recipes page
 export default function Recipes() {
-
-    // Get recipes + delete function
   const { recipes, deleteRecipe } = useRecipe();
 
-    // Show/hide form and track which recipe is being edited
   const [showForm, setShowForm] = useState(false);
-
-    // Which recipe is being edited
   const [editingRecipeId, setEditingRecipeId] = useState(null);
 
-    // Search input value
   const [searchTerm, setSearchTerm] = useState("");
 
-    // Delete confirmation modal state
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [recipeToDelete, setRecipeToDelete] = useState(null);
 
-    // Open form for creating new recipe
+  const [showFilters, setShowFilters] = useState(false);
+
+  const DIETARY_OPTIONS = [
+    "Vegan",
+    "Halal",
+    "Kosher",
+    "Pescatarian",
+    "Keto",
+    "Vegetarian",
+  ];
+
+  const ALLERGY_OPTIONS = ["Peanuts", "Dairy", "Gluten", "Shellfish", "Soy", "Nuts"];
+
+  const [filters, setFilters] = useState({
+    diet: [],
+    allergies: [],
+    sortByCost: "none", // none | asc | desc
+    timeMin: "",
+    timeMax: "",
+  });
+
+  const toggleArray = (key, value) => {
+    setFilters((prev) => {
+      const arr = prev[key] || [];
+      const exists = arr.includes(value);
+      return { ...prev, [key]: exists ? arr.filter((v) => v !== value) : [...arr, value] };
+    });
+  };
+
+  const clearFilters = () => {
+    setFilters({ diet: [], allergies: [], sortByCost: "none", timeMin: "", timeMax: "" });
+  };
+
   const handleCreateNew = () => {
     setEditingRecipeId(null);
     setShowForm(true);
   };
 
-    // Open form for editing recipe
   const handleEdit = (recipeId) => {
     setEditingRecipeId(recipeId);
     setShowForm(true);
   };
 
-    // Close form
   const handleCloseForm = () => {
     setShowForm(false);
     setEditingRecipeId(null);
   };
 
-    // Open delete confirmation modal
   const handleDelete = (recipeId) => {
     setRecipeToDelete(recipeId);
     setShowDeleteConfirm(true);
   };
 
-    // Confirm delete
   const handleConfirmDelete = () => {
-    if (recipeToDelete) {
-      deleteRecipe(recipeToDelete);
-    }
+    if (recipeToDelete) deleteRecipe(recipeToDelete);
     setShowDeleteConfirm(false);
     setRecipeToDelete(null);
   };
 
-    // Cancel delete
   const handleCancelDelete = () => {
     setShowDeleteConfirm(false);
     setRecipeToDelete(null);
   };
 
-    // Filter recipes based on search text
-  const filteredRecipes = recipes.filter((recipe) =>
-    recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredRecipes = recipes
+    .filter((r) => {
+      const title = (r.title ?? r.name ?? "").toLowerCase();
+      return title.includes(searchTerm.toLowerCase());
+    })
+    .filter((r) => {
+      const time = Number(r.time ?? r.preparationTime);
+      const min = filters.timeMin === "" ? null : Number(filters.timeMin);
+      const max = filters.timeMax === "" ? null : Number(filters.timeMax);
+
+      if (!Number.isNaN(time)) {
+        if (min !== null && time < min) return false;
+        if (max !== null && time > max) return false;
+      }
+      return true;
+    })
+    .filter((r) => {
+      if (filters.diet.length === 0) return true;
+      const diet = r.diet ?? r.dietaryPreferences ?? r.mealPreferences ?? [];
+      return filters.diet.every((d) => diet.includes(d));
+    })
+    .filter((r) => {
+      if (filters.allergies.length === 0) return true;
+      const allergies = r.allergies ?? [];
+      return filters.allergies.every((a) => allergies.includes(a));
+    })
+    .sort((a, b) => {
+      if (filters.sortByCost === "none") return 0;
+      const aCost = Number(a.cost) || 0;
+      const bCost = Number(b.cost) || 0;
+      return filters.sortByCost === "asc" ? aCost - bCost : bCost - aCost;
+    });
+
+  const activeFilterCount =
+    filters.diet.length +
+    filters.allergies.length +
+    (filters.sortByCost !== "none" ? 1 : 0) +
+    (filters.timeMin !== "" ? 1 : 0) +
+    (filters.timeMax !== "" ? 1 : 0);
 
   return (
     <div className="recipes-page">
@@ -80,51 +134,122 @@ export default function Recipes() {
         </button>
       </div>
 
-      <div className="recipes-search">
-        <input
-          type="text"
-          placeholder="Search recipes..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
+      <div className="recipes-toolbar">
+        <div className="recipes-search">
+          <input
+            type="text"
+            placeholder="Search recipes..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+        </div>
+
+        <button className="btn-filter" onClick={() => setShowFilters((s) => !s)}>
+          Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+        </button>
       </div>
+
+      {showFilters && (
+        <div className="filters-panel">
+          <div className="filters-section">
+            <div className="filters-title">Dietary Preferences</div>
+            <div className="filters-grid">
+              {DIETARY_OPTIONS.map((opt) => (
+                <label key={opt} className="filter-check">
+                  <input
+                    type="checkbox"
+                    checked={filters.diet.includes(opt)}
+                    onChange={() => toggleArray("diet", opt)}
+                  />
+                  <span>{opt}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="filters-section">
+            <div className="filters-title">Allergies</div>
+            <div className="filters-grid">
+              {ALLERGY_OPTIONS.map((opt) => (
+                <label key={opt} className="filter-check">
+                  <input
+                    type="checkbox"
+                    checked={filters.allergies.includes(opt)}
+                    onChange={() => toggleArray("allergies", opt)}
+                  />
+                  <span>{opt}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="filters-section">
+            <div className="filters-title">Sort by cost</div>
+            <select
+              className="filter-select"
+              value={filters.sortByCost}
+              onChange={(e) => setFilters((p) => ({ ...p, sortByCost: e.target.value }))}
+            >
+              <option value="none">No sorting</option>
+              <option value="asc">Low to high</option>
+              <option value="desc">High to low</option>
+            </select>
+          </div>
+
+          <div className="filters-section">
+            <div className="filters-title">Time range (minutes)</div>
+            <div className="time-range">
+              <input
+                className="filter-input"
+                type="number"
+                min="0"
+                placeholder="Min"
+                value={filters.timeMin}
+                onChange={(e) => setFilters((p) => ({ ...p, timeMin: e.target.value }))}
+              />
+              <span className="time-sep">—</span>
+              <input
+                className="filter-input"
+                type="number"
+                min="0"
+                placeholder="Max"
+                value={filters.timeMax}
+                onChange={(e) => setFilters((p) => ({ ...p, timeMax: e.target.value }))}
+              />
+            </div>
+          </div>
+
+          <div className="filters-actions">
+            <button className="btn-secondary" onClick={clearFilters}>
+              Clear
+            </button>
+            <button className="btn-primary" onClick={() => setShowFilters(false)}>
+              Apply
+            </button>
+          </div>
+        </div>
+      )}
 
       {filteredRecipes.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">🍳</div>
           <h2>
-            {recipes.length === 0
-              ? "No recipes yet"
-              : "No recipes match your search"}
+            {recipes.length === 0 ? "No recipes yet" : "No recipes match your filters"}
           </h2>
           <p>
-            {recipes.length === 0
-              ? "Start creating your first recipe!"
-              : "Try a different search term"}
+            {recipes.length === 0 ? "Start creating your first recipe!" : "Try adjusting your filters"}
           </p>
-          {recipes.length === 0 && (
-            <button className="btn-create-recipe" onClick={handleCreateNew}>
-              Create First Recipe
-            </button>
-          )}
         </div>
       ) : (
         <div className="recipes-grid">
           {filteredRecipes.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              recipe={recipe}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
+            <RecipeCard key={recipe.id} recipe={recipe} onEdit={handleEdit} onDelete={handleDelete} />
           ))}
         </div>
       )}
 
-      {showForm && (
-        <RecipeForm recipeId={editingRecipeId} onClose={handleCloseForm} />
-      )}
+      {showForm && <RecipeForm recipeId={editingRecipeId} onClose={handleCloseForm} />}
 
       {showDeleteConfirm && (
         <ConfirmationModal
