@@ -8,9 +8,8 @@ function normalizeString(s, caseSensitive) {
   return caseSensitive ? String(s) : String(s).toLowerCase();
 }
 
-/**
- * Build a predicate function for one recipe using filters and options
- */
+ // Build a predicate function for one recipe using filters and options
+
 function buildPredicate(filters = {}, options = {}) {
   const {
     attrMap = {
@@ -63,7 +62,6 @@ function buildPredicate(filters = {}, options = {}) {
         const allPresent = dietaryFilter.every(tag => rTags.includes(tag));
         if (!allPresent) return false;
       } else {
-        
         const anyPresent = dietaryFilter.some(tag => rTags.includes(tag));
         if (!anyPresent) return false;
       }
