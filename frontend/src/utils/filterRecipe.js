@@ -25,6 +25,8 @@ function buildPredicate(filters = {}, options = {}) {
   const difficultyFilter = toArray(filters.difficulty || filters.difficulties || []).map(s => normalizeString(s, caseSensitive));
   const costFilter = toArray(filters.cost || filters.price || []).map(s => normalizeString(s, caseSensitive));
   const dietaryFilter = toArray(filters.dietaryTags || filters.tags || []).map(s => normalizeString(s, caseSensitive));
+  const includeIngredients = toArray(filters.includeIngredients || filters.ingredientsInclude || filters.include || filters.ingredients || []).map(s => normalizeString(s, caseSensitive));
+  const excludeIngredients = toArray(filters.excludeIngredients || filters.ingredientsExclude || filters.exclude || []).map(s => normalizeString(s, caseSensitive));
 
   return function predicate(recipe) {
     if (!recipe || typeof recipe !== 'object') return false;
@@ -65,11 +67,11 @@ function buildPredicate(filters = {}, options = {}) {
       }
     }
 
-        
-        // INGREDIENTS INCLUDE / EXCLUDE
+    // INGREDIENTS INCLUDE / EXCLUDE
     if (includeIngredients.length || excludeIngredients.length) {
-         const rIngr = toArray(recipe[attrMap.ingredients]).map(i => normalizeString(i, caseSensitive));
+      const rIngr = toArray(recipe[attrMap.ingredients]).map(i => normalizeString(i, caseSensitive));
 
+    
     return true;
   };
 }
