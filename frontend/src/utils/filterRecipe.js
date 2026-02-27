@@ -40,7 +40,6 @@ function buildPredicate(filters = {}, options = {}) {
         }
       }
     }
-
         // DIFFICULTY
     if (difficultyFilter.length) {
       const r = normalizeString(recipe[attrMap.difficulty], caseSensitive);
