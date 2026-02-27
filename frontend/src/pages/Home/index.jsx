@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuth } from "../../context/authContext";
 import { useNavigate } from "react-router-dom";
-import ProfileDropdown from "../Profile";
+import ProfileDropdown from "../../components/Profile";
 import "./home.css";
 import Header from "../../components/header";
 const Home = () => {
@@ -49,7 +49,12 @@ const Home = () => {
           >
             Meal Preferences
           </button>
-          <button className="home-btn recipes">Recipes</button>
+          <button 
+          className="home-btn recipes"
+          onClick={() => navigate("/recipes")}
+          >
+            Recipes
+          </button>
           <button className="home-btn shopping">Week Planner</button>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../services/firebase/firebase";
 import { useAuth } from "../../context/authContext";
 import "./mealpreferences.css";
-import ProfileDropdown from "../Profile";
+import ProfileDropdown from "../../components/Profile";
 
 const DIET_OPTIONS = ["Vegan", "Halal", "Kosher", "Pescatarian", "Keto", "Vegetarian"];
 const ALLERGY_OPTIONS = ["Peanuts", "Dairy", "Gluten", "Shellfish", "Soy", "Nuts"];
