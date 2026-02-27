@@ -83,7 +83,7 @@ function buildPredicate(filters = {}, options = {}) {
           if (!allIncluded) return false;
         } else {
           const anyIncluded = includeIngredients.some(ing => rIngr.includes(ing));
-          if (anyIncluded) return false;
+          if (!anyIncluded) return false;
         }
       }
     }
