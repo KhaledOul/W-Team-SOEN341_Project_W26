@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import Header from '../../components/header';
 import React from "react"; 
 
+
 export default function Landing() {
   return (
     <div>
-      <Header></Header>
       <div className="landing-container">
         <div className="landing-card">
           <h1 className="landing-title">Welcome</h1>
