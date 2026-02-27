@@ -71,7 +71,13 @@ function buildPredicate(filters = {}, options = {}) {
     if (includeIngredients.length || excludeIngredients.length) {
       const rIngr = toArray(recipe[attrMap.ingredients]).map(i => normalizeString(i, caseSensitive));
 
-    
+      // filter out exluded ingredients
+      if (excludeIngredients.length) {
+        const anyExcluded = excludeIngredients.some(ing => rIngr.includes(ing));
+        if (anyExcluded) return false;
+      }
+
+     
     return true;
   };
 }
