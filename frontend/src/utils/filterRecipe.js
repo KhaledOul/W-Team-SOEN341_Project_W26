@@ -28,7 +28,6 @@ function buildPredicate(filters = {}, options = {}) {
 
   return function predicate(recipe) {
     if (!recipe || typeof recipe !== 'object') return false;
-
     // TIME
     if (timeFilter != null) {
       const recipeTime = Number(recipe[attrMap.time]);
