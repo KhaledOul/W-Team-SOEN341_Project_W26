@@ -33,7 +33,6 @@ function buildPredicate(filters = {}, options = {}) {
 
     // TIME
     if (timeFilter != null) {
-      // allow either a number (max time) or an object {min, max}
       const recipeTime = Number(recipe[attrMap.time]);
       if (!Number.isNaN(recipeTime)) {
         if (typeof timeFilter === 'number') {
@@ -60,8 +59,7 @@ function buildPredicate(filters = {}, options = {}) {
         // DIETARY TAGS
     if (dietaryFilter.length) {
       const rTags = toArray(recipe[attrMap.dietaryTags]).map(t => normalizeString(t, caseSensitive));
-      if (matchAllDietaryTags) {
-        
+      if (matchAllDietaryTags) {  
         const allPresent = dietaryFilter.every(tag => rTags.includes(tag));
         if (!allPresent) return false;
       } else {
