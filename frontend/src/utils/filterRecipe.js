@@ -50,3 +50,9 @@ function buildPredicate(filters = {}, options = {}) {
       const r = normalizeString(recipe[attrMap.difficulty], caseSensitive);
       if (!difficultyFilter.includes(r)) return false;
     }
+
+        // COST
+    if (costFilter.length) {
+      const r = normalizeString(recipe[attrMap.cost], caseSensitive);
+      if (!costFilter.includes(r)) return false;
+    }
