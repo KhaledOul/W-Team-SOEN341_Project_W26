@@ -65,6 +65,11 @@ function buildPredicate(filters = {}, options = {}) {
       }
     }
 
+        
+        // INGREDIENTS INCLUDE / EXCLUDE
+    if (includeIngredients.length || excludeIngredients.length) {
+         const rIngr = toArray(recipe[attrMap.ingredients]).map(i => normalizeString(i, caseSensitive));
+
     return true;
   };
 }
