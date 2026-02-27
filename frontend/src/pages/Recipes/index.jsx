@@ -81,14 +81,23 @@ export default function Recipes() {
       </div>
 
       <div className="recipes-search">
-        <input
-          type="text"
-          placeholder="Search recipes..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
-      </div>
+   <div className="search-wrapper">
+    <span className="search-icon">🔍</span>
+
+    <input
+      type="text"
+      placeholder="Search recipes..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          console.log("Search triggered:", searchTerm);
+        }
+      }}
+      className="search-input"
+    />
+  </div>
+</div>
 
       {filteredRecipes.length === 0 ? (
         <div className="empty-state">
