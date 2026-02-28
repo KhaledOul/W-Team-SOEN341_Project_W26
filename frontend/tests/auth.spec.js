@@ -2,90 +2,72 @@ import { test, expect } from '@playwright/test';
 
 test.setTimeout(60000);
 
+async function registerUser(page, email, password) {
+  await page.goto('/register');
+  await page.waitForLoadState('networkidle');
+
+  await page.locator('input[type="email"]').fill(email);
+  await page.locator('input[type="password"]').nth(0).fill(password);
+  await page.locator('input[type="password"]').nth(1).fill(password);
+
+  await page.getByRole('button', { name: /sign up|register/i }).click();
+}
+
 test.describe('User Registration and Login', () => {
   test('should successfully register a new user', async ({ page }) => {
-    const regEmail = `reg-${Date.now()}@example.com`;
+    const regEmail = `reg-${Date.now()}-${Math.floor(Math.random() * 100000)}@example.com`;
     const regPassword = 'TestPassword123!';
 
-    // Navigate to register page
-    await page.goto('/register');
-    await page.waitForLoadState('networkidle');
-
-    // Fill in registration form
-    await page.fill('input[type="email"]', regEmail);
-    await page.fill('input[type="password"]', regPassword);
-    
-    // Submit registration form
-    const submitButton = page.locator('button:has-text("Register"), button:has-text("Sign Up")').first();
-    await expect(submitButton).toBeVisible({ timeout: 10000 });
-    await submitButton.click();
-
-    // Wait for form submission to complete
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
-
-    // Verify page is responsive
-    expect(page).toBeDefined();
+    await registerUser(page, regEmail, regPassword);
+    await expect(page).toHaveURL(/\/home$/);
+    await expect(page.getByText('Welcome to')).toBeVisible();
   });
 
   test('should successfully login with valid credentials', async ({ page }) => {
-    const loginEmail = `login-${Date.now()}@example.com`;
+    const loginEmail = `login-${Date.now()}-${Math.floor(Math.random() * 100000)}@example.com`;
     const loginPassword = 'TestPassword123!';
-    
-    // Navigate to login page
-    await page.goto('/login');
-    await page.waitForLoadState('networkidle');
 
-    // Fill in login form
-    await page.fill('input[type="email"]', loginEmail);
-    await page.fill('input[type="password"]', loginPassword);
+    await registerUser(page, loginEmail, loginPassword);
+    await expect(page).toHaveURL(/\/home$/);
 
-    // Click login button
-    const loginButton = page.locator('button:has-text("Login"), button:has-text("Sign In")').first();
-    await expect(loginButton).toBeVisible({ timeout: 10000 });
-    await loginButton.click();
+    await page.getByRole('button', { name: 'Logout' }).click();
+    await expect(page).toHaveURL(/\/login$/);
 
-    // Wait for page to settle
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
+    await page.locator('input[type="email"]').fill(loginEmail);
+    await page.locator('input[type="password"]').fill(loginPassword);
+    await page.getByRole('button', { name: /sign in|login/i }).click();
 
-    // Verify page is responsive
-    expect(page).toBeDefined();
+    await expect(page).toHaveURL(/\/home$/);
+    await expect(page.getByText('Welcome to')).toBeVisible();
   });
 
   test('should show error with invalid credentials', async ({ page }) => {
-    // Navigate to login page
     await page.goto('/login');
     await page.waitForLoadState('networkidle');
 
-    // Fill in login form with invalid credentials
-    await page.fill('input[type="email"]', 'nonexistent@example.com');
-    await page.fill('input[type="password"]', 'wrongpassword');
+    await page.locator('input[type="email"]').fill('nonexistent@example.com');
+    await page.locator('input[type="password"]').fill('wrongpassword');
+    await page.getByRole('button', { name: /sign in|login/i }).click();
 
-    // Click login button
-    const loginButton = page.locator('button:has-text("Login"), button:has-text("Sign In")').first();
-    await loginButton.click();
-
-    // Wait for page to settle
-    await page.waitForTimeout(2000);
-
-    // Verify page is responsive
-    expect(page).toBeDefined();
+    const error = page.locator('.login-error');
+    await expect(error).toBeVisible();
+    await expect(error).toContainText(/incorrect email or password|error occurred during sign-in/i);
   });
 
   test('should prevent login with empty fields', async ({ page }) => {
-    // Navigate to login page
     await page.goto('/login');
     await page.waitForLoadState('networkidle');
 
-    // Try to submit without filling fields
-    const loginButton = page.locator('button:has-text("Login"), button:has-text("Sign In")').first();
-    await loginButton.click();
+    await page.getByRole('button', { name: /sign in|login/i }).click();
 
-    // Wait for page to settle
-    await page.waitForTimeout(2000);
+    const emailInput = page.locator('input[type="email"]');
+    const passwordInput = page.locator('input[type="password"]');
 
-    // Verify page is responsive
-    expect(page).toBeDefined();
+    const emailIsValid = await emailInput.evaluate((el) => el.checkValidity());
+    const passwordIsValid = await passwordInput.evaluate((el) => el.checkValidity());
+
+    expect(emailIsValid).toBe(false);
+    expect(passwordIsValid).toBe(false);
+    await expect(page).toHaveURL(/\/login$/);
   });
 });

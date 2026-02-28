@@ -7,12 +7,21 @@ on:
     branches: [main, develop]
 
 jobs:
-  test:
-    name: Run Tests
+  playwright:
+    name: Run Playwright Tests
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [24.13.0]
+    defaults:
+      run:
+        working-directory: frontend
+    env:
+      CI: true
+      VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+      VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+      VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+      VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+      VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+      VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+      VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
 
     steps:
       - name: Checkout code
@@ -21,62 +30,47 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 24.13.0
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
-        working-directory: frontend
         run: npm ci
 
       - name: Install Playwright browsers
-        working-directory: frontend
         run: npx playwright install --with-deps
 
-      - name: Run tests
-        working-directory: frontend
-        run: npm test
-
-  build:
-    name: Build Check
-    runs-on: ubuntu-latest
-    needs: test
-    strategy:
-      matrix:
-        node-version: [24.13.0]
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
-
-      - name: Install dependencies
-        working-directory: frontend
-        run: npm ci
-
-      - name: Build for production
-        working-directory: frontend
-        run: npm run build
-
-  status:
-    name: CI Status
-    runs-on: ubuntu-latest
-    needs: [test, build]
-    if: always()
-
-    steps:
-      - name: Check if all jobs passed
+      - name: Validate required environment variables
         run: |
-          if [ "${{ needs.test.result }}" = "success" ] && [ "${{ needs.build.result }}" = "success" ]; then
-            echo "All checks passed"
-            exit 0
-          else
-            echo "Tests or build failed"
+          missing=0
+          for var in \
+            VITE_FIREBASE_API_KEY \
+            VITE_FIREBASE_AUTH_DOMAIN \
+            VITE_FIREBASE_PROJECT_ID \
+            VITE_FIREBASE_STORAGE_BUCKET \
+            VITE_FIREBASE_MESSAGING_SENDER_ID \
+            VITE_FIREBASE_APP_ID \
+            VITE_FIREBASE_MEASUREMENT_ID
+          do
+            if [ -z "${!var}" ]; then
+              echo "::error::Missing required secret: ${var}"
+              missing=1
+            fi
+          done
+          if [ "${missing}" -ne 0 ]; then
             exit 1
           fi
+
+      - name: Run tests
+        run: npx playwright test
+
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            frontend/playwright-report
+            frontend/test-results
+          if-no-files-found: warn
+          retention-days: 14
