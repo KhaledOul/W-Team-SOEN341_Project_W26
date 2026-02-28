@@ -2,7 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import "./styles/index.css";
-import App from "./App.jsx";
+import "./styles/app.css";
+import AppProviders from "./app/App.jsx";
+import AppRouter from "./app/router.jsx";
+import Header from "./shared/components/header/header.jsx";
 
 const rootElement = document.getElementById("root");
 
@@ -13,7 +16,10 @@ if (!rootElement) {
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <AppProviders>
+        <Header />
+        <AppRouter />
+      </AppProviders>
     </BrowserRouter>
   </React.StrictMode>
 );
