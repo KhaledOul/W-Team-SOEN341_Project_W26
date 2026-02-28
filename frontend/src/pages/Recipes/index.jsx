@@ -1,14 +1,13 @@
-// src/pages/recipes/index.jsx (minimal changes needed for filtering by diet/allergies/time/cost)
-// Replace your whole Recipes page with this if you want filters to match the new fields.
 import React, { useState } from "react";
 import { useRecipe } from "../../context/recipeContext";
+import { Link } from "react-router-dom";
 import RecipeCard from "../../features/recipes/card";
 import RecipeForm from "../../features/recipes/form";
 import ConfirmationModal from "../../features/recipes/confirmationModal";
 import "./recipes.css";
 
 export default function Recipes() {
-  const { recipes, deleteRecipe } = useRecipe();
+  const { recipes, loading, error, deleteRecipe } = useRecipe();
 
   const [showForm, setShowForm] = useState(false);
   const [editingRecipeId, setEditingRecipeId] = useState(null);
@@ -34,7 +33,7 @@ export default function Recipes() {
   const [filters, setFilters] = useState({
     diet: [],
     allergies: [],
-    sortByCost: "none", // none | asc | desc
+    sortByCost: "none",
     timeMin: "",
     timeMax: "",
   });
@@ -71,8 +70,8 @@ export default function Recipes() {
     setShowDeleteConfirm(true);
   };
 
-  const handleConfirmDelete = () => {
-    if (recipeToDelete) deleteRecipe(recipeToDelete);
+  const handleConfirmDelete = async () => {
+    if (recipeToDelete) await deleteRecipe(recipeToDelete);
     setShowDeleteConfirm(false);
     setRecipeToDelete(null);
   };
@@ -122,15 +121,40 @@ export default function Recipes() {
     (filters.timeMin !== "" ? 1 : 0) +
     (filters.timeMax !== "" ? 1 : 0);
 
+  if (loading) {
+    return (
+      <div className="recipes-page">
+        <div className="recipes-loading">
+          <span className="material-icons spinning" style={{ fontSize: "48px" }}>hourglass_empty</span>
+          <p>Loading recipes…</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="recipes-page">
+      {error && (
+        <div className="recipes-error">
+          <span className="material-icons" style={{ fontSize: "20px", marginRight: "8px", verticalAlign: "middle" }}>error</span>
+          {error}
+        </div>
+      )}
+      <nav className="recipes-nav" aria-label="Page navigation">
+        <Link to="/home" className="back-link">
+          <span className="material-icons">arrow_back</span>
+          Back to Home
+        </Link>
+      </nav>
+
       <div className="recipes-header">
         <div className="header-content">
           <h1>My Recipes</h1>
           <p>{recipes.length} recipes saved</p>
         </div>
         <button className="btn-create-recipe" onClick={handleCreateNew}>
-          + New Recipe
+          <span className="material-icons" style={{ fontSize: "18px", marginRight: "var(--space-xs)", verticalAlign: "middle" }}>add</span>
+          New Recipe
         </button>
       </div>
 
@@ -146,6 +170,7 @@ export default function Recipes() {
         </div>
 
         <button className="btn-filter" onClick={() => setShowFilters((s) => !s)}>
+          <span className="material-icons" style={{ fontSize: "18px", marginRight: "var(--space-xs)", verticalAlign: "middle" }}>filter_list</span>
           Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
         </button>
       </div>
@@ -208,7 +233,7 @@ export default function Recipes() {
                 value={filters.timeMin}
                 onChange={(e) => setFilters((p) => ({ ...p, timeMin: e.target.value }))}
               />
-              <span className="time-sep">—</span>
+              <span className="time-sep">&mdash;</span>
               <input
                 className="filter-input"
                 type="number"
@@ -233,7 +258,9 @@ export default function Recipes() {
 
       {filteredRecipes.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-icon">🍳</div>
+          <div className="empty-icon">
+            <span className="material-icons" style={{ fontSize: "48px" }}>skillet</span>
+          </div>
           <h2>
             {recipes.length === 0 ? "No recipes yet" : "No recipes match your filters"}
           </h2>

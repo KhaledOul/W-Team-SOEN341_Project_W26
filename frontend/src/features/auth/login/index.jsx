@@ -5,7 +5,6 @@ import {
   doSignInWithGoogle,
 } from "../../../services/firebase/auth";
 import { useAuth } from "../../../context/authContext";
-import Header from "../../../components/header";
 
 import "./login.css";
 
@@ -97,7 +96,6 @@ const Login = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
             />
           </div>
 
@@ -106,9 +104,8 @@ const Login = () => {
           <button
             type="submit"
             disabled={isSigningIn}
-            className={`login-btn login-btn-primary ${
-              isSigningIn ? "is-disabled" : ""
-            }`}
+            className={`login-btn login-btn-primary ${isSigningIn ? "is-disabled" : ""
+              }`}
           >
             {isSigningIn ? "Signing In..." : "Sign In"}
           </button>
@@ -128,18 +125,23 @@ const Login = () => {
         <button
           disabled={isSigningIn}
           onClick={onGoogleSignIn}
-          className={`login-btn login-btn-google ${
-            isSigningIn ? "is-disabled" : ""
-          }`}
+          className={`login-btn login-btn-google ${isSigningIn ? "is-disabled" : ""
+            }`}
         >
-        <img
-            src="/src/assets/google.png"   
+          <img
+            src="/src/assets/google.png"
             alt="Google logo"
             className="google-icon"
-        />
-
+          />
           {isSigningIn ? "Signing In..." : "Continue with Google"}
         </button>
+
+        <div className="login-back">
+          <Link to="/">
+            <span className="material-icons" style={{ fontSize: "14px", verticalAlign: "middle", marginRight: "4px" }}>arrow_back</span>
+            Back to Home
+          </Link>
+        </div>
       </div>
     </div>
   );

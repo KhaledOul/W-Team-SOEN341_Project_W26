@@ -8,34 +8,34 @@ const Header = () => {
     const { userLoggedIn } = useAuth();
 
     return (
-        <nav className='flex flex-row w-full gap-x-2 z-20 fixed top-0 left-0 h-12 border-b place-content-center items-center bg-gray-200'>
+        <nav className="global-nav" aria-label="Main navigation">
             {userLoggedIn ? (
                 <>
-                    <Link to="/home" className='px-3 py-1 text-sm font-medium hover:bg-gray-300 rounded'>
+                    <Link to="/home" className="nav-link">
                         Home
                     </Link>
-                    <Link to="/mealpreferences" className='px-3 py-1 text-sm font-medium hover:bg-gray-300 rounded'>
+                    <Link to="/mealpreferences" className="nav-link">
                         Meal Preferences
                     </Link>
-                    <Link to="/recipes" className='px-3 py-1 text-sm font-medium hover:bg-gray-300 rounded'>
+                    <Link to="/recipes" className="nav-link">
                         Recipes
                     </Link>
-                    <button 
+                    <button
                         onClick={() => {
                             doSignOut();
                             navigate('/login');
                         }}
-                        className='px-3 py-1 text-sm font-medium hover:bg-red-300 rounded'
+                        className="nav-btn-logout"
                     >
                         Logout
                     </button>
                 </>
             ) : (
                 <>
-                    <Link to="/login" className='px-3 py-1 text-sm font-medium hover:bg-gray-300 rounded'>
+                    <Link to="/login" className="nav-link">
                         Login
                     </Link>
-                    <Link to="/register" className='px-3 py-1 text-sm font-medium hover:bg-gray-300 rounded'>
+                    <Link to="/register" className="nav-link">
                         Register
                     </Link>
                 </>

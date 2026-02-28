@@ -1,95 +1,127 @@
 import React, { useContext, useState, useEffect } from "react";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  query,
+  serverTimestamp,
+} from "firebase/firestore";
+import { db } from "../../services/firebase/firebase";
 import { useAuth } from "../authContext";
 
 // Create global Recipe context
 const RecipeContext = React.createContext();
 
-// Custom hook to access the Recipe 
+// Custom hook to access the Recipe context
 export function useRecipe() {
   return useContext(RecipeContext);
 }
 
 export function RecipeProvider({ children }) {
-    // Store recipes
   const [recipes, setRecipes] = useState([]);
-    // Loading state 
-  const [loading, setLoading] = useState(false);
-    // Current logged-in user
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { currentUser } = useAuth();
 
-  // Load recipes from localStorage when user changes
+  // Real-time Firestore listener — replaces localStorage reads
   useEffect(() => {
-    if (currentUser) {
-      loadRecipes();
-    } else {
+    if (!currentUser) {
       setRecipes([]);
+      setLoading(false);
+      return;
     }
-  }, [currentUser]);
 
-  // Get recipes from localStorage
-  const loadRecipes = () => {
     setLoading(true);
+    setError(null);
+
+    let unsubscribe = () => { };
+
     try {
-      const storedRecipes = localStorage.getItem(`recipes_${currentUser.uid}`);
-      if (storedRecipes) {
-        setRecipes(JSON.parse(storedRecipes));
-      }
-    } catch (error) {
-      console.error("Error loading recipes:", error);
-    } finally {
+      const q = query(
+        collection(db, "users", currentUser.uid, "recipes")
+      );
+
+      unsubscribe = onSnapshot(
+        q,
+        (snapshot) => {
+          const docs = snapshot.docs.map((d) => ({
+            id: d.id,
+            ...d.data(),
+          }));
+          // Sort client-side: newest first
+          docs.sort((a, b) => {
+            const aTime = a.createdAt?.toMillis?.() ?? 0;
+            const bTime = b.createdAt?.toMillis?.() ?? 0;
+            return bTime - aTime;
+          });
+          setRecipes(docs);
+          setLoading(false);
+        },
+        (err) => {
+          console.error("Error listening to recipes:", err);
+          setError("Failed to load recipes. Please try again.");
+          setLoading(false);
+        }
+      );
+    } catch (err) {
+      console.error("Error setting up recipes listener:", err);
+      setError("Failed to load recipes. Please try again.");
       setLoading(false);
     }
-  };
 
-  // Save recipes to localStorage
-  const saveRecipes = (updatedRecipes) => {
+    return () => unsubscribe();
+  }, [currentUser]);
+
+  // Create new recipe in Firestore
+  const createRecipe = async (newRecipe) => {
+    if (!currentUser) return;
     try {
-      localStorage.setItem(
-        `recipes_${currentUser.uid}`,
-        JSON.stringify(updatedRecipes)
+      await addDoc(
+        collection(db, "users", currentUser.uid, "recipes"),
+        {
+          ...newRecipe,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        }
       );
-    } catch (error) {
-      console.error("Error saving recipes:", error);
+    } catch (err) {
+      console.error("Error creating recipe:", err);
+      setError("Failed to create recipe.");
     }
   };
 
-  // Create new recipe
-  const createRecipe = (newRecipe) => {
-    const recipe = {
-      id: Date.now().toString(),
-      ...newRecipe,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    const updatedRecipes = [...recipes, recipe];
-    setRecipes(updatedRecipes);
-    saveRecipes(updatedRecipes);
-    return recipe;
+  // Update existing recipe in Firestore
+  const updateRecipe = async (id, updatedData) => {
+    if (!currentUser) return;
+    try {
+      await updateDoc(
+        doc(db, "users", currentUser.uid, "recipes", id),
+        {
+          ...updatedData,
+          updatedAt: serverTimestamp(),
+        }
+      );
+    } catch (err) {
+      console.error("Error updating recipe:", err);
+      setError("Failed to update recipe.");
+    }
   };
 
-  // Update existing recipe
-  const updateRecipe = (id, updatedData) => {
-    const updatedRecipes = recipes.map((recipe) =>
-      recipe.id === id
-        ? {
-            ...recipe,
-            ...updatedData,
-            updatedAt: new Date().toISOString(),
-          }
-        : recipe
-    );
-    setRecipes(updatedRecipes);
-    saveRecipes(updatedRecipes);
+  // Delete recipe from Firestore
+  const deleteRecipe = async (id) => {
+    if (!currentUser) return;
+    try {
+      await deleteDoc(doc(db, "users", currentUser.uid, "recipes", id));
+    } catch (err) {
+      console.error("Error deleting recipe:", err);
+      setError("Failed to delete recipe.");
+    }
   };
 
-  // Delete recipe
-  const deleteRecipe = (id) => {
-    const updatedRecipes = recipes.filter((recipe) => recipe.id !== id);
-    setRecipes(updatedRecipes);
-    saveRecipes(updatedRecipes);
-  };
-
-  // Get recipe by ID
+  // Get recipe by ID from the current in-memory list
   const getRecipeById = (id) => {
     return recipes.find((recipe) => recipe.id === id);
   };
@@ -97,6 +129,7 @@ export function RecipeProvider({ children }) {
   const value = {
     recipes,
     loading,
+    error,
     createRecipe,
     updateRecipe,
     deleteRecipe,

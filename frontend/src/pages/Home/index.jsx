@@ -1,9 +1,8 @@
 import React from "react";
 import { useAuth } from "../../context/authContext";
-import { useNavigate } from "react-router-dom";
-import ProfileDropdown from "../../components/Profile";
+import { useNavigate, Link } from "react-router-dom";
 import "./home.css";
-import Header from "../../components/header";
+
 const Home = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -15,6 +14,12 @@ const Home = () => {
           <div className="home-logged-out">
             You are not logged in.
           </div>
+          <div style={{ marginTop: "var(--space-md)" }}>
+            <Link to="/login" className="back-link">
+              <span className="material-icons">arrow_back</span>
+              Go to Login
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -24,38 +29,37 @@ const Home = () => {
 
   return (
     <div className="home-page">
-        <div className="home-top-right"> 
-        <ProfileDropdown />              
-      </div>
       <div className="home-wrapper">
         <div className="home-card">
-        {/* Big text */}
-        <h1 className="home-title">
-          Hello, {name} 👋
-        </h1>
+          <h1 className="home-title">
+            Hello, {name}
+          </h1>
 
-        {/* Small text */}
-        <p className="home-message">
-          Welcome to <strong>W Team Meal Preps</strong>
-        </p>
-      </div>
-      
-          
-          {/* Options buttons */}
+          <p className="home-message">
+            Welcome to <strong>W Team Meal Preps</strong>
+          </p>
+        </div>
+
+        {/* Options buttons */}
         <div className="home-options-outside">
-          <button 
-          className="home-btn meal"
-          onClick={() => navigate("/mealpreferences")}
+          <button
+            className="home-btn meal"
+            onClick={() => navigate("/mealpreferences")}
           >
+            <span className="material-icons" style={{ fontSize: "24px", marginRight: "var(--space-sm)", verticalAlign: "middle" }}>restaurant_menu</span>
             Meal Preferences
           </button>
-          <button 
-          className="home-btn recipes"
-          onClick={() => navigate("/recipes")}
+          <button
+            className="home-btn recipes"
+            onClick={() => navigate("/recipes")}
           >
+            <span className="material-icons" style={{ fontSize: "24px", marginRight: "var(--space-sm)", verticalAlign: "middle" }}>menu_book</span>
             Recipes
           </button>
-          <button className="home-btn shopping">Week Planner</button>
+          <button className="home-btn shopping">
+            <span className="material-icons" style={{ fontSize: "24px", marginRight: "var(--space-sm)", verticalAlign: "middle" }}>calendar_today</span>
+            Week Planner
+          </button>
         </div>
       </div>
     </div>

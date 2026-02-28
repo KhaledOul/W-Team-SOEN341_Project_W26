@@ -69,7 +69,6 @@ const Register = () => {
               disabled={isRegistering}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
             />
           </div>
 
@@ -83,7 +82,6 @@ const Register = () => {
               disabled={isRegistering}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="••••••••"
             />
           </div>
 
@@ -94,9 +92,8 @@ const Register = () => {
           <button
             type="submit"
             disabled={isRegistering}
-            className={`register-btn register-btn-primary ${
-              isRegistering ? "is-disabled" : ""
-            }`}
+            className={`register-btn register-btn-primary ${isRegistering ? "is-disabled" : ""
+              }`}
           >
             {isRegistering ? "Signing Up..." : "Sign Up"}
           </button>
@@ -104,6 +101,13 @@ const Register = () => {
 
         <div className="register-footer">
           Already have an account? <Link to="/login">Continue</Link>
+        </div>
+
+        <div className="register-back">
+          <Link to="/">
+            <span className="material-icons" style={{ fontSize: "14px", verticalAlign: "middle", marginRight: "4px" }}>arrow_back</span>
+            Back to Home
+          </Link>
         </div>
       </div>
     </div>

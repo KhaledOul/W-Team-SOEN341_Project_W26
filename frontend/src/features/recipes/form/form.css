@@ -14,14 +14,14 @@
 .recipe-form-container {
   width: 100%;
   max-width: 720px;
-  max-height: 85vh;            /* KEY */
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  max-height: 85vh;
+  background: var(--frosted-mint);
+  border-radius: var(--space-sm);
+  box-shadow: 0 2px var(--space-md) rgba(0, 0, 0, 0.2);
   overflow: hidden;
 
-  display: flex;               /* KEY */
-  flex-direction: column;      /* KEY */
+  display: flex;
+  flex-direction: column;
 }
 
 /* HEADER */
@@ -30,53 +30,58 @@
   align-items: center;
   justify-content: space-between;
 
-  padding: 16px 20px;
-  border-bottom: 1px solid #eee;
-  flex-shrink: 0;              /* KEY */
+  padding: var(--space-md) var(--space-md);
+  border-bottom: 1px solid var(--muted-olive);
+  flex-shrink: 0;
 }
 
 .form-header h2 {
   margin: 0;
-  font-size: 20px;
-  color: #222;
+  font-size: var(--text-lg);
+  color: var(--dusty-olive);
 }
 
 /* CLOSE BUTTON */
 .close-btn {
   width: 38px;
   height: 38px;
-  border-radius: 10px;
+  border-radius: var(--space-sm);
   border: none;
   cursor: pointer;
 
-  background: #f5f5f5;
-  color: #222;
+  background: var(--tea-green);
+  color: var(--dusty-olive);
   font-size: 22px;
   line-height: 1;
   transition: 0.2s ease;
 }
 
 .close-btn:hover {
-  background: #eaeaea;
+  background: var(--muted-olive);
+}
+
+.close-btn:focus {
+  outline: 3px solid var(--palm-leaf);
+  outline-offset: 2px;
 }
 
 /* FORM BODY (scrolls) */
 .recipe-form-container form {
-  padding: 16px 20px 20px 20px;
-  overflow-y: auto;            /* KEY */
+  padding: var(--space-md) var(--space-md) var(--space-md) var(--space-md);
+  overflow-y: auto;
 }
 
 /* FORM */
 .form-group {
-  margin-bottom: 12px;
+  margin-bottom: var(--space-sm);
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-sm);
   font-weight: 700;
-  color: #222;
-  font-size: 14px;
+  color: var(--dusty-olive);
+  font-size: var(--text-sm);
 }
 
 /* INPUTS */
@@ -85,11 +90,13 @@
 .form-group select {
   width: 100%;
   padding: 11px 13px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  font-size: 14px;
+  border: 1px solid var(--muted-olive);
+  border-radius: var(--space-sm);
+  font-size: var(--text-sm);
   outline: none;
   box-sizing: border-box;
+  background: var(--frosted-mint);
+  color: var(--dusty-olive);
 }
 
 .form-group textarea {
@@ -100,33 +107,33 @@
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
-  border-color: #4caf50;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.12);
+  border-color: var(--dusty-olive);
+  box-shadow: 0 0 0 3px rgba(113, 131, 85, 0.15);
 }
 
 /* ROWS */
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: var(--space-sm);
 }
 
 /* CHECKBOX CHIPS */
 .prefs-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--space-sm);
 }
 
 .pref-check {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-sm);
 
-  padding: 10px 14px;
-  border: 1px solid #e7e7e7;
+  padding: var(--space-sm) 14px;
+  border: 1px solid var(--muted-olive);
   border-radius: 999px;
-  background: #fafafa;
+  background: var(--tea-green);
 
   cursor: pointer;
   user-select: none;
@@ -134,61 +141,76 @@
 }
 
 .pref-check input {
-  width: 16px;
-  height: 16px;
-  accent-color: #4caf50;
+  width: var(--space-md);
+  height: var(--space-md);
+  accent-color: var(--dusty-olive);
 }
 
 .pref-check:hover {
-  background: #f0fff3;
-  border-color: rgba(76, 175, 80, 0.4);
+  background: var(--muted-olive);
+  border-color: var(--palm-leaf);
 }
 
 /* ERRORS */
 .error {
-  border-color: #e53935 !important;
-  box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.12) !important;
+  border-color: #c53030 !important;
+  box-shadow: 0 0 0 3px rgba(197, 48, 48, 0.12) !important;
 }
 
 .error-message {
   display: block;
-  margin-top: 6px;
+  margin-top: var(--space-xs);
   font-size: 12px;
-  color: #e53935;
+  color: #c53030;
   font-weight: 600;
 }
 
-/* ACTIONS (sticky-ish at bottom inside form scroll) */
+/* ACTIONS */
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: var(--space-sm);
   margin-top: 14px;
-  padding-top: 10px;
-  border-top: 1px solid #f1f1f1;
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--muted-olive);
 }
 
 .btn-cancel {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  background: #f5f5f5;
+  padding: var(--space-sm) 14px;
+  border-radius: var(--space-sm);
+  border: 1px solid var(--muted-olive);
+  background: var(--tea-green);
   cursor: pointer;
   font-weight: 700;
+  color: var(--dusty-olive);
+}
+
+.btn-cancel:hover {
+  background: var(--muted-olive);
+}
+
+.btn-cancel:focus {
+  outline: 3px solid var(--palm-leaf);
+  outline-offset: 2px;
 }
 
 .btn-submit {
-  padding: 10px 14px;
-  border-radius: 10px;
+  padding: var(--space-sm) 14px;
+  border-radius: var(--space-sm);
   border: none;
-  background: #4caf50;
-  color: white;
+  background: var(--dusty-olive);
+  color: var(--frosted-mint);
   cursor: pointer;
   font-weight: 800;
 }
 
 .btn-submit:hover {
-  background: #3e8e41;
+  background: var(--palm-leaf);
+}
+
+.btn-submit:focus {
+  outline: 3px solid var(--palm-leaf);
+  outline-offset: 2px;
 }
 
 /* MOBILE */

@@ -1,5 +1,3 @@
-// src/features/recipes/card/index.jsx (replace entire file)
-// Updated to show new fields (Title, Author, Difficulty, Diet, Allergies, Time, Cost)
 import React from "react";
 import "./card.css";
 
@@ -28,33 +26,37 @@ export default function RecipeCard({ recipe, onEdit, onDelete }) {
       <div className="recipe-header">
         <h3>{title}</h3>
         <div className="recipe-actions">
-          <button className="btn-edit" onClick={() => onEdit(recipe.id)} title="Edit recipe">
-            ✏️
+          <button className="btn-edit" onClick={() => onEdit(recipe.id)} title="Edit recipe" aria-label="Edit recipe">
+            <span className="material-icons">edit</span>
           </button>
-          <button className="btn-delete" onClick={() => onDelete(recipe.id)} title="Delete recipe">
-            🗑️
+          <button className="btn-delete" onClick={() => onDelete(recipe.id)} title="Delete recipe" aria-label="Delete recipe">
+            <span className="material-icons">delete</span>
           </button>
         </div>
       </div>
 
       <div className="recipe-meta">
         <div className="meta-item">
-          <span className="meta-label">👤 Author:</span>
+          <span className="material-icons meta-icon">person</span>
+          <span className="meta-label">Author:</span>
           <span className="meta-value">{recipe.author || "—"}</span>
         </div>
 
         <div className="meta-item">
-          <span className="meta-label">⭐ Difficulty:</span>
+          <span className="material-icons meta-icon">star</span>
+          <span className="meta-label">Difficulty:</span>
           <span className="meta-value">{recipe.difficulty || "—"}</span>
         </div>
 
         <div className="meta-item">
-          <span className="meta-label">⏱️ Time:</span>
+          <span className="material-icons meta-icon">schedule</span>
+          <span className="meta-label">Time:</span>
           <span className="meta-value">{time !== "" ? `${time} min` : "—"}</span>
         </div>
 
         <div className="meta-item">
-          <span className="meta-label">💰 Cost:</span>
+          <span className="material-icons meta-icon">attach_money</span>
+          <span className="meta-label">Cost:</span>
           <span className="meta-value">
             ${Number(recipe.cost || 0).toFixed(2)}
           </span>

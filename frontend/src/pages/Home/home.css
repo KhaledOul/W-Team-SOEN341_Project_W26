@@ -1,225 +1,231 @@
 /* Full page layout */
 
 .home-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px; /* space between card and buttons */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
 }
+
 .home-card-main {
-    margin-top: -80px; /* up to let space to the 3 other options */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  margin-top: -80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Buttons outside of the card */
 .home-options-outside {
-    display: flex;
-    justify-content: center; 
-    gap: 30px; 
-    margin-top: 40px; 
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: var(--space-xl);
 }
 
 .home-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 2px var(--space-sm) rgba(0, 0, 0, 0.2);
+  background: var(--palm-leaf);
+}
+
+.home-btn:focus {
+  outline: 3px solid var(--frosted-mint);
+  outline-offset: 2px;
 }
 
 /* Responsive for mobile */
 @media (max-width: 480px) {
-    .home-options-outside {
-        flex-direction: column;
-        gap: 12px;
-    }
+  .home-options-outside {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
 
-    .home-btn {
-        width: 100%;
-    }
+  .home-btn {
+    width: 100%;
+  }
 }
+
 /* Style for Home buttons */
 .home-btn {
-    padding: 36px 48px;
-    border-radius: 14px;
-    font-weight: 700;
-    font-size: 1.3rem;
-    cursor: pointer;
-    border: none;
-    color: #fff;
-    background: rgba(2, 83, 41, 0.85); 
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-    transition: 0.3s ease;
+  padding: 36px 48px;
+  border-radius: var(--space-sm);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  cursor: pointer;
+  border: none;
+  color: var(--frosted-mint);
+  background: var(--dusty-olive);
+  box-shadow: 0 2px var(--space-sm) rgba(0, 0, 0, 0.15);
+  transition: 0.3s ease;
 }
 
 .home-page {
-    min-height: 100vh;
-    width: 100vw;
-  
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  
-    background: linear-gradient(135deg, #025329, #06ae4e),
-    url('public/assets/3211017.jpg') no-repeat bottom;
-    font-family: Arial, sans-serif;
-     background-size: cover; 
-    background-position: bottom;
-    padding: 20px;
-    box-sizing: border-box;
+  min-height: calc(100vh - var(--navbar-height));
+  width: 100%;
 
-    position: relative;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  
-  
-  /* Card */
+  background: linear-gradient(135deg, var(--dusty-olive), var(--palm-leaf));
+  font-family: system-ui, Arial, sans-serif;
+  background-size: cover;
+  background-position: bottom;
+  padding: var(--space-md);
+  box-sizing: border-box;
+
+  position: relative;
+}
+
+/* Card */
+.home-card {
+  width: 100%;
+  max-width: 600px;
+
+  background: rgba(233, 245, 219, 0.15);
+  backdrop-filter: blur(15px);
+
+  border: 1px solid rgba(233, 245, 219, 0.25);
+  border-radius: var(--space-sm);
+
+  box-shadow: 0 2px var(--space-sm) rgba(0, 0, 0, 0.15);
+
+  padding: var(--space-xl) 36px;
+  box-sizing: border-box;
+
+  text-align: center;
+  color: var(--frosted-mint);
+}
+
+/* Headline */
+.home-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  margin-bottom: var(--space-md);
+}
+
+/* Subtitle / message */
+.home-message {
+  font-size: var(--text-base);
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+/* Highlight username/email */
+.home-user {
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: var(--space-xs);
+}
+
+/* Not logged in state */
+.home-logged-out {
+  font-size: var(--text-lg);
+  font-weight: 800;
+  color: var(--frosted-mint);
+  opacity: 0.95;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
   .home-card {
-    width: 100%;
-    max-width: 600px;
-  
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(15px);
-  
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 24px;
-  
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
-  
-    padding: 40px 36px;
-    box-sizing: border-box;
-  
-    text-align: center;
-    color: #ffffff;
+    padding: 30px var(--space-lg);
   }
-  
-  /* Headline */
+
   .home-title {
-    font-size: 2.2rem;
-    font-weight: 900;
-    margin-bottom: 16px;
+    font-size: 1.8rem;
   }
-  
-  /* Subtitle / message */
-  .home-message {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    opacity: 0.95;
-  }
-  
-  /* Highlight username/email */
-  .home-user {
-    font-weight: 900;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-  
-  /* Not logged in state */
-  .home-logged-out {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: #ffffff;
-    opacity: 0.95;
-  }
-  
-  /* Responsive */
-  @media (max-width: 480px) {
-    .home-card {
-      padding: 30px 24px;
-      border-radius: 18px;
-    }
-  
-    .home-title {
-      font-size: 1.8rem;
-    }
-  }
+}
 
 
 .home-top-right {
-    position: absolute;
-    top: 18px;
-    right: 18px;
-  }
-  
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+}
 
 
 
-  .profile-wrap {
-    position: relative;
-  }
-  
-  /* circular profile button */
-  .profile-btn {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-  
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  
-    cursor: pointer;
-    padding: 0;
-  
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
-  }
-  
-  /* PNG icon inside the button */
-  .profile-icon {
-    width: 40px;
-    height: 40px;
-    object-fit: contain;
-    pointer-events: none;
-  }
-  
-  /* dropdown menu */
-  .profile-menu {
-    position: absolute;
-    top: 52px;
-    right: 0;
-  
-    width: 200px;
-    padding: 10px;
-  
-    background: rgba(255, 255, 255, 0.16);
-    backdrop-filter: blur(16px);
-  
-    border-radius: 14px;
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
-  }
-  
-  /* dropdown items */
-  .profile-item {
-    width: 100%;
-    text-align: left;
-  
-    background: transparent;
-    border: none;
-  
-    color: white;
-    padding: 10px;
-    border-radius: 10px;
-  
-    font-weight: 800;
-    cursor: pointer;
-  }
-  
-  .profile-item:hover {
-    background: rgba(255, 255, 255, 0.12);
-  }
-  
-  /* divider line */
-  .profile-divider {
-    height: 1px;
-    margin: 8px 2px;
-    background: rgba(255, 255, 255, 0.22);
-  }
-  
-  /* logout emphasis */
-  .profile-item.danger {
-    color: #ffe4e6;
-  }
+.profile-wrap {
+  position: relative;
+}
+
+/* circular profile button */
+.profile-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+
+  border: 1px solid rgba(233, 245, 219, 0.3);
+  background: rgba(233, 245, 219, 0.15);
+  backdrop-filter: blur(10px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  padding: 0;
+
+  box-shadow: 0 2px var(--space-sm) rgba(0, 0, 0, 0.12);
+}
+
+.profile-btn:focus {
+  outline: 3px solid var(--frosted-mint);
+  outline-offset: 2px;
+}
+
+/* dropdown menu */
+.profile-menu {
+  position: absolute;
+  top: 52px;
+  right: 0;
+
+  width: 220px;
+  padding: var(--space-sm);
+
+  background: var(--tea-green);
+  backdrop-filter: blur(16px);
+
+  border-radius: var(--space-sm);
+  box-shadow: 0 2px var(--space-md) rgba(0, 0, 0, 0.18);
+}
+
+/* dropdown items */
+.profile-item {
+  width: 100%;
+  text-align: left;
+
+  background: transparent;
+  border: none;
+
+  color: var(--dusty-olive);
+  padding: var(--space-sm);
+  border-radius: var(--space-sm);
+
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.profile-item:hover {
+  background: var(--muted-olive);
+}
+
+.profile-item:focus {
+  outline: 3px solid var(--palm-leaf);
+  outline-offset: 2px;
+}
+
+/* divider line */
+.profile-divider {
+  height: 1px;
+  margin: var(--space-sm) 2px;
+  background: var(--muted-olive);
+}
+
+/* logout emphasis */
+.profile-item.danger {
+  color: var(--dusty-olive);
+}

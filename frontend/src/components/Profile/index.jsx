@@ -1,67 +1,80 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { doSignOut } from "../../services/firebase/auth";
 
 const ProfileDropdown = () => {
-  const [open, setOpen] = useState(false); // dropdown open/close state
-  const wrapperRef = useRef(null);         //  ref for click-outside detection
-  const navigate = useNavigate();          //   programmatic navigation
+  const [open, setOpen] = useState(false);
+  const wrapperRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      
       if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
         setOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside); 
+    document.addEventListener("mousedown", handleClickOutside);
     return () =>
-      document.removeEventListener("mousedown", handleClickOutside); 
+      document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleLogout = async () => {
-    await doSignOut();                     
-    navigate("/", { replace: true });      
+    await doSignOut();
+    navigate("/", { replace: true });
   };
 
   const handleMealPreferences = () => {
-    setOpen(false);                        
-    navigate("/mealpreferences");           
+    setOpen(false);
+    navigate("/mealpreferences");
+  };
+
+  const handleHome = () => {
+    setOpen(false);
+    navigate("/home");
   };
 
   return (
-    <div className="profile-wrap" ref={wrapperRef}> {/* added wrapper */}
+    <div className="profile-wrap" ref={wrapperRef}>
       <button
-        className="profile-btn"             
-        onClick={() => setOpen((prev) => !prev)} //  added toggle logic
+        className="profile-btn"
+        onClick={() => setOpen((prev) => !prev)}
         type="button"
+        aria-label="Profile menu"
         title="Profile"
       >
-        <img
-          src="/src/assets/profile.png"     //  PNG icon (replace path)
-          alt="Profile"
-          className="profile-icon"          
-        />
+        <span className="material-icons" style={{ fontSize: "28px", color: "var(--dusty-olive)" }}>
+          account_circle
+        </span>
       </button>
 
-      {open && (                               
-        <div className="profile-menu">
+      {open && (
+        <nav className="profile-menu" aria-label="Profile navigation">
           <button
             className="profile-item"
-            onClick={handleMealPreferences}    //  added navigation
+            onClick={handleHome}
           >
+            <span className="material-icons" style={{ fontSize: "18px", marginRight: "var(--space-sm)" }}>home</span>
+            Home
+          </button>
+
+          <button
+            className="profile-item"
+            onClick={handleMealPreferences}
+          >
+            <span className="material-icons" style={{ fontSize: "18px", marginRight: "var(--space-sm)" }}>restaurant_menu</span>
             Meal preferences
           </button>
 
-          <div className="profile-divider" /> {/*  added divider */}
+          <div className="profile-divider" />
 
           <button
             className="profile-item danger"
-            onClick={handleLogout}             //  added logout handler
+            onClick={handleLogout}
           >
+            <span className="material-icons" style={{ fontSize: "18px", marginRight: "var(--space-sm)" }}>logout</span>
             Log out
           </button>
-        </div>
+        </nav>
       )}
     </div>
   );

@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../services/firebase/firebase";
 import { useAuth } from "../../context/authContext";
 import "./mealpreferences.css";
-import ProfileDropdown from "../../components/Profile";
 
 const DIET_OPTIONS = ["Vegan", "Halal", "Kosher", "Pescatarian", "Keto", "Vegetarian"];
 const ALLERGY_OPTIONS = ["Peanuts", "Dairy", "Gluten", "Shellfish", "Soy", "Nuts"];
@@ -15,8 +14,12 @@ const MealPreferences = () => {
   const [selectedAllergies, setSelectedAllergies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState(null); // 'success' | 'error' | null
 
-  // Load user preferences on mount
+  // Keep a ref to the last-known-good state for rollback
+  const lastSavedDiet = useRef([]);
+  const lastSavedAllergies = useRef([]);
+
   useEffect(() => {
     const loadPreferences = async () => {
       if (!currentUser) {
@@ -25,29 +28,27 @@ const MealPreferences = () => {
       }
 
       try {
-        // Set user name from Firebase Auth
         setUserName(currentUser.displayName || currentUser.email?.split("@")[0] || "User");
 
-        // Load preferences from Firestore
         const userDocRef = doc(db, "users", currentUser.uid);
         const userDoc = await getDoc(userDocRef);
 
         if (userDoc.exists()) {
           const data = userDoc.data();
-          
-          // Load diet preferences (array format based on your screenshot)
+
           if (data.diet && Array.isArray(data.diet)) {
             setSelectedDiet(data.diet);
+            lastSavedDiet.current = data.diet;
           }
 
-          // Load allergies (array format based on your screenshot)
           if (data.allergies && Array.isArray(data.allergies)) {
             setSelectedAllergies(data.allergies);
+            lastSavedAllergies.current = data.allergies;
           }
         }
       } catch (error) {
         console.error("Error loading preferences:", error);
-        alert("Failed to load preferences. Please try again.");
+        setSaveStatus("load-error");
       } finally {
         setLoading(false);
       }
@@ -72,33 +73,43 @@ const MealPreferences = () => {
     );
   };
 
-  const handleSave = async () => {
-    if (!currentUser) {
-      alert("You must be logged in to save preferences.");
-      return;
-    }
+  const handleSave = () => {
+    if (!currentUser) return;
+
+    // Optimistic: capture current state, mark as saving, fire DB write in background
+    const dietSnapshot = [...selectedDiet];
+    const allergySnapshot = [...selectedAllergies];
 
     setSaving(true);
-    try {
-      const userDocRef = doc(db, "users", currentUser.uid);
-      
-      // Save to Firestore with the same structure as your screenshot
-      await setDoc(
-        userDocRef,
-        {
-          diet: selectedDiet,
-          allergies: selectedAllergies,
-        },
-        { merge: true } // This will update only these fields without overwriting other data
-      );
+    setSaveStatus(null);
 
-      alert("Preferences saved successfully!");
-    } catch (error) {
-      console.error("Error saving preferences:", error);
-      alert("Failed to save preferences. Please try again.");
-    } finally {
-      setSaving(false);
-    }
+    const userDocRef = doc(db, "users", currentUser.uid);
+
+    setDoc(
+      userDocRef,
+      {
+        diet: dietSnapshot,
+        allergies: allergySnapshot,
+      },
+      { merge: true }
+    )
+      .then(() => {
+        lastSavedDiet.current = dietSnapshot;
+        lastSavedAllergies.current = allergySnapshot;
+        setSaveStatus("success");
+      })
+      .catch((error) => {
+        console.error("Error saving preferences:", error);
+        // Rollback to last known good state
+        setSelectedDiet(lastSavedDiet.current);
+        setSelectedAllergies(lastSavedAllergies.current);
+        setSaveStatus("error");
+      })
+      .finally(() => {
+        setSaving(false);
+        // Auto-clear status after 2s
+        setTimeout(() => setSaveStatus(null), 2000);
+      });
   };
 
   if (loading) {
@@ -113,13 +124,9 @@ const MealPreferences = () => {
 
   return (
     <div className="meal-preferences-container">
-      <div className="profile-dropdown-wrapper">
-        <ProfileDropdown />
-      </div>
-      
       <div className="preferences-card">
         <div className="user-greeting">Hello, {userName}!</div>
-        
+
         <h1>Meal Preferences</h1>
         <p className="subtitle">Customize your experience</p>
 
@@ -160,13 +167,33 @@ const MealPreferences = () => {
         </div>
 
         {/* Save Button */}
-        <button 
-          className="save-button" 
+        <button
+          className="save-button"
           onClick={handleSave}
           disabled={saving}
         >
           {saving ? "Saving..." : "Save Preferences"}
         </button>
+
+        {/* Inline save status indicator */}
+        {saveStatus === "success" && (
+          <div className="snackbar snackbar--success">
+            <span className="material-icons" style={{ fontSize: "18px" }}>check_circle</span>
+            Saved
+          </div>
+        )}
+        {saveStatus === "error" && (
+          <div className="snackbar snackbar--error">
+            <span className="material-icons" style={{ fontSize: "18px" }}>error</span>
+            Save failed. Changes reverted.
+          </div>
+        )}
+        {saveStatus === "load-error" && (
+          <div className="snackbar snackbar--error">
+            <span className="material-icons" style={{ fontSize: "18px" }}>error</span>
+            Failed to load preferences. Please refresh.
+          </div>
+        )}
       </div>
     </div>
   );

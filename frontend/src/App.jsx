@@ -1,8 +1,9 @@
 
-import React from "react"; 
+import React from "react";
 import { useRoutes } from "react-router-dom";
 import { AuthProvider } from "./context/authContext";
 import { RecipeProvider } from "./context/recipeContext";
+import Header from "./components/header";
 
 import Landing from "./pages/Landing";
 import Login from "./features/auth/login";
@@ -25,7 +26,10 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <RecipeProvider>{routesElement}</RecipeProvider>
+      <RecipeProvider>
+        <Header />
+        {routesElement}
+      </RecipeProvider>
     </AuthProvider>
   );
 }

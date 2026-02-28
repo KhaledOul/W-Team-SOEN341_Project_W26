@@ -99,7 +99,7 @@ export default function RecipeForm({ recipeId = null, onClose }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
@@ -115,8 +115,8 @@ export default function RecipeForm({ recipeId = null, onClose }) {
       allergies: formData.allergies,
     };
 
-    if (recipeId) updateRecipe(recipeId, recipeData);
-    else createRecipe(recipeData);
+    if (recipeId) await updateRecipe(recipeId, recipeData);
+    else await createRecipe(recipeData);
 
     onClose();
   };
