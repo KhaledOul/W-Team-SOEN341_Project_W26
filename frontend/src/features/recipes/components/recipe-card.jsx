@@ -43,7 +43,7 @@ export default function RecipeCard({ recipe, onEdit, onDelete }) {
             <div className="recipe-meta">
                 <div className="meta-item">
                     <span className="material-icons meta-icon">person</span>
-                    <span className="meta-value">{recipe.author || "-"}</span>
+                    <span className="meta-value">{recipe.authorName || recipe.author || "-"}</span>
                 </div>
 
                 <div className="meta-item">

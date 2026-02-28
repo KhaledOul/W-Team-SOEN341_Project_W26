@@ -28,7 +28,6 @@ export function RecipeProvider({ children }) {
 
         try {
             unsubscribe = recipeService.subscribeToRecipes(
-                currentUser.uid,
                 (docs) => {
                     setRecipes(docs);
                     setLoading(false);
@@ -51,7 +50,13 @@ export function RecipeProvider({ children }) {
     const createRecipe = async (newRecipe) => {
         if (!currentUser) return;
         try {
-            await recipeService.createRecipe(currentUser.uid, newRecipe);
+            const authorName =
+                currentUser.displayName || currentUser.email || "Anonymous";
+            await recipeService.createRecipe(
+                currentUser.uid,
+                authorName,
+                newRecipe
+            );
         } catch (err) {
             console.error("Error creating recipe:", err);
             setError("Failed to create recipe.");
@@ -61,7 +66,7 @@ export function RecipeProvider({ children }) {
     const updateRecipe = async (id, updatedData) => {
         if (!currentUser) return;
         try {
-            await recipeService.updateRecipe(currentUser.uid, id, updatedData);
+            await recipeService.updateRecipe(id, updatedData);
         } catch (err) {
             console.error("Error updating recipe:", err);
             setError("Failed to update recipe.");
@@ -71,7 +76,7 @@ export function RecipeProvider({ children }) {
     const deleteRecipe = async (id) => {
         if (!currentUser) return;
         try {
-            await recipeService.deleteRecipe(currentUser.uid, id);
+            await recipeService.deleteRecipe(id);
         } catch (err) {
             console.error("Error deleting recipe:", err);
             setError("Failed to delete recipe.");
