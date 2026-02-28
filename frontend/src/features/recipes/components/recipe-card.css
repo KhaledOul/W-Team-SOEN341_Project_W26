@@ -84,12 +84,13 @@
 /* ===== Meta row ===== */
 .recipe-meta {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     gap: 12px;
     margin-bottom: var(--space-md);
     padding-bottom: var(--space-sm);
     border-bottom: 1px solid var(--tea-green);
+    overflow-x: auto;
 }
 
 .meta-item {
@@ -98,6 +99,7 @@
     gap: 3px;
     font-size: var(--text-sm);
     color: var(--muted-olive-2);
+    flex-shrink: 0;
 }
 
 .meta-icon {
@@ -233,6 +235,10 @@
     text-overflow: ellipsis;
 }
 
+.step-empty {
+    color: var(--muted-olive);
+}
+
 /* ===== View button ===== */
 .btn-view-details {
     width: 100%;
@@ -275,3 +281,4 @@
         max-width: 100%;
     }
 }
+

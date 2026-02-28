@@ -146,33 +146,33 @@ export default function RecipesPage() {
                 </Link>
             </nav>
 
-            <div className="recipes-header">
-                <div className="header-content">
+            <div className="recipes-header-area">
+                <div className="recipes-header-top">
                     <h1>My Recipes</h1>
-                    <p>{recipes.length} recipes saved</p>
+                    <p className="recipes-count">{recipes.length} recipes saved</p>
                 </div>
                 <button className="btn-create-recipe" onClick={handleCreateNew}>
-                    <span className="material-icons" style={{ fontSize: "18px" }}>add</span>
-                    New Recipe
+                    <span className="material-icons">add</span>
+                    + New Recipe
                 </button>
-            </div>
 
-            <div className="recipes-toolbar">
-                <div className="recipes-search">
-                    <span className="material-icons search-icon">search</span>
-                    <input
-                        type="text"
-                        placeholder="Search recipes..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="search-input"
-                    />
+                <div className="recipes-toolbar">
+                    <div className="recipes-search">
+                        <span className="material-icons search-icon">search</span>
+                        <input
+                            type="text"
+                            placeholder="Search recipes..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="search-input"
+                        />
+                    </div>
+
+                    <button className="btn-filter" onClick={() => setShowFilters((s) => !s)}>
+                        <span className="material-icons">tune</span>
+                        Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+                    </button>
                 </div>
-
-                <button className="btn-filter" onClick={() => setShowFilters((s) => !s)}>
-                    <span className="material-icons" style={{ fontSize: "18px" }}>tune</span>
-                    Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-                </button>
             </div>
 
             {showFilters && (
@@ -257,22 +257,24 @@ export default function RecipesPage() {
             )}
 
             {filteredRecipes.length === 0 ? (
-                <div className="empty-state">
-                    <div className="empty-icon">
-                        <span className="material-icons" style={{ fontSize: "48px" }}>search_off</span>
+                <div className="recipes-grid recipes-grid-empty">
+                    <div className="empty-state">
+                        <div className="empty-icon">
+                            <span className="material-icons">search_off</span>
+                        </div>
+                        <h2>
+                            {recipes.length === 0 ? "No recipes yet" : "No recipes match your filters"}
+                        </h2>
+                        <p>
+                            {recipes.length === 0 ? "Get started by adding your first recipe" : "Try adjusting your filters"}
+                        </p>
+                        {recipes.length === 0 && (
+                            <button className="btn-add-first" onClick={handleCreateNew}>
+                                <span className="material-icons">add</span>
+                                + Add your first recipe
+                            </button>
+                        )}
                     </div>
-                    <h2>
-                        {recipes.length === 0 ? "No recipes yet" : "No recipes match your filters"}
-                    </h2>
-                    <p>
-                        {recipes.length === 0 ? "Get started by adding your first recipe" : "Try adjusting your filters"}
-                    </p>
-                    {recipes.length === 0 && (
-                        <button className="btn-add-first" onClick={handleCreateNew}>
-                            <span className="material-icons" style={{ fontSize: "18px" }}>add</span>
-                            Add your first recipe
-                        </button>
-                    )}
                 </div>
             ) : (
                 <div className="recipes-grid">

@@ -43,7 +43,7 @@ export default function RecipeCard({ recipe, onEdit, onDelete }) {
             <div className="recipe-meta">
                 <div className="meta-item">
                     <span className="material-icons meta-icon">person</span>
-                    <span className="meta-value">{recipe.author || "—"}</span>
+                    <span className="meta-value">{recipe.author || "-"}</span>
                 </div>
 
                 <div className="meta-item">
@@ -53,13 +53,13 @@ export default function RecipeCard({ recipe, onEdit, onDelete }) {
                             {recipe.difficulty}
                         </span>
                     ) : (
-                        <span className="meta-value">—</span>
+                        <span className="meta-value">-</span>
                     )}
                 </div>
 
                 <div className="meta-item">
                     <span className="material-icons meta-icon">schedule</span>
-                    <span className="meta-value">{time !== "" ? `${time} min` : "—"}</span>
+                    <span className="meta-value">{time !== "" ? `${time} min` : "-"}</span>
                 </div>
 
                 <div className="meta-item">
@@ -106,7 +106,7 @@ export default function RecipeCard({ recipe, onEdit, onDelete }) {
                         1. {firstStep.trim()}
                     </div>
                 ) : (
-                    <div className="step-truncated" style={{ color: "var(--muted-olive)" }}>
+                    <div className="step-truncated step-empty">
                         No steps added
                     </div>
                 )}
@@ -120,3 +120,4 @@ export default function RecipeCard({ recipe, onEdit, onDelete }) {
         </div>
     );
 }
+
