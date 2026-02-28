@@ -15,6 +15,9 @@ jobs:
         working-directory: frontend
     env:
       CI: true
+
+
+    x-firebase-env: &firebase-env
       VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
       VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
       VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
@@ -40,7 +43,9 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Validate required environment variables
+      - name: Validate required secrets
+        env:
+          <<: *firebase-env
         run: |
           missing=0
           for var in \
@@ -61,16 +66,23 @@ jobs:
             exit 1
           fi
 
-      - name: Run tests
+      - name: Build app
+        env:
+          <<: *firebase-env
+        run: npm run build
+
+      - name: Run Playwright tests
+        env:
+          <<: *firebase-env
         run: npx playwright test
 
-      - name: Upload Playwright artifacts
+      - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
           path: |
-            frontend/playwright-report
-            frontend/test-results
+            frontend/playwright-report/
+            frontend/test-results/
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: 30
