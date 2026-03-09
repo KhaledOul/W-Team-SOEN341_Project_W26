@@ -129,14 +129,11 @@
   }
 }
 
-
 .home-top-right {
   position: absolute;
   top: var(--space-md);
   right: var(--space-md);
 }
-
-
 
 .profile-wrap {
   position: relative;

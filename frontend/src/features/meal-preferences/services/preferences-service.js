@@ -1,17 +1,17 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "../../../services/firebase";
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db } from '../../../services/firebase';
 
 export async function loadPreferences(userId) {
-    const userDocRef = doc(db, "users", userId);
-    const userDoc = await getDoc(userDocRef);
+  const userDocRef = doc(db, 'users', userId);
+  const userDoc = await getDoc(userDocRef);
 
-    if (userDoc.exists()) {
-        return userDoc.data();
-    }
-    return null;
+  if (userDoc.exists()) {
+    return userDoc.data();
+  }
+  return null;
 }
 
 export async function savePreferences(userId, { diet, allergies }) {
-    const userDocRef = doc(db, "users", userId);
-    return setDoc(userDocRef, { diet, allergies }, { merge: true });
+  const userDocRef = doc(db, 'users', userId);
+  return setDoc(userDocRef, { diet, allergies }, { merge: true });
 }

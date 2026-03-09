@@ -1,0 +1,48 @@
+{
+    // ─── Formatting ────────────────────────────────────────────────────────────
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    // ─── On-save actions ───────────────────────────────────────────────────────
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit",
+        "source.organizeImports": "explicit"
+    },
+    // ─── ESLint ────────────────────────────────────────────────────────────────
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact"
+    ],
+    // ─── Conventional Commits scopes ───────────────────────────────────────────
+    "conventionalCommits.scopes": [
+        "ci",
+        "config",
+        "auth",
+        "firebase",
+        "components",
+        "pages",
+        "hooks",
+        "store",
+        "styles",
+        "test",
+        "deps"
+    ],
+    // ─── Explorer ──────────────────────────────────────────────────────────────
+    "files.exclude": {
+        "**/node_modules": true,
+        "**/dist": true,
+        "**/.firebase": true
+    }
+}

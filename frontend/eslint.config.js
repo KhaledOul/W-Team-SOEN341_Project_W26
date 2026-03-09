@@ -7,7 +7,13 @@ import jsxA11y from 'eslint-plugin-jsx-a11y';
 
 export default [
   {
-    ignores: ['dist/**', 'node_modules/**', 'coverage/**', 'playwright-report/**', 'test-results/**'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'coverage/**',
+      'playwright-report/**',
+      'test-results/**',
+    ],
   },
   {
     files: ['**/*.{js,jsx}'],
@@ -50,10 +56,13 @@ export default [
       'react-hooks/exhaustive-deps': 'warn',
 
       // React Refresh
-      'react-refresh/only-export-components': ['warn', {
-        allowConstantExport: true,
-        allowExportNames: ['useAuth', 'useRecipe'],
-      }],
+      'react-refresh/only-export-components': [
+        'warn',
+        {
+          allowConstantExport: true,
+          allowExportNames: ['useAuth', 'useRecipe'],
+        },
+      ],
 
       // Accessibility
       'jsx-a11y/alt-text': 'warn',
@@ -63,7 +72,7 @@ export default [
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'no-console': ['warn', { allow: ['error', 'warn'] }],
       'no-undef': 'error',
-      'eqeqeq': ['error', 'always'],
+      eqeqeq: ['error', 'always'],
     },
   },
 ];

@@ -42,7 +42,6 @@ export default defineConfig({
       name: 'chrome',
       use: { ...devices['Desktop Chrome'] },
     },
-
   ],
 
   /* Run your local dev server before starting the tests */
@@ -53,4 +52,3 @@ export default defineConfig({
     timeout: 120 * 1000,
   },
 });
-

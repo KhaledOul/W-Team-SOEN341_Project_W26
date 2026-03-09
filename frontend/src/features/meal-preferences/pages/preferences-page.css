@@ -76,8 +76,8 @@
   background-color: rgb(113 131 85 / 10%);
 }
 
-.option-item input[type="radio"],
-.option-item input[type="checkbox"] {
+.option-item input[type='radio'],
+.option-item input[type='checkbox'] {
   width: var(--space-md);
   height: var(--space-md);
   cursor: pointer;
