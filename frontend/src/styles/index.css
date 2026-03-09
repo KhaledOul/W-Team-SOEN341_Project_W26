@@ -26,12 +26,10 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color: var(--dusty-olive);
   background-color: var(--frosted-mint);
-
   font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -117,7 +115,7 @@ button:focus-visible {
 }
 
 .snackbar--error {
-  background-color: rgba(200, 60, 60, 0.15);
+  background-color: rgb(200 60 60 / 15%);
   color: #c53030;
 }
 
@@ -231,8 +229,7 @@ button:focus-visible {
 }
 
 /* Global responsive rules */
-@media (max-width: 768px) {
-
+@media (width <= 768px) {
   .recipes-page,
   .meal-preferences-container {
     padding-left: var(--space-sm);

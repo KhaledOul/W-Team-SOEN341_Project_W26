@@ -13,11 +13,11 @@
 
 /* Card in the center */
 .landing-card {
-  background: rgba(233, 245, 219, 0.2);
+  background: rgb(233 245 219 / 20%);
   backdrop-filter: blur(15px);
   padding: 60px 50px;
   border-radius: var(--space-sm);
-  box-shadow: 0 2px var(--space-sm) rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px var(--space-sm) rgb(0 0 0 / 15%);
   text-align: center;
   max-width: 600px;
   width: 100%;
@@ -79,5 +79,5 @@
 }
 
 .btn-register:hover {
-  background-color: rgba(233, 245, 219, 0.2);
+  background-color: rgb(233 245 219 / 20%);
 }

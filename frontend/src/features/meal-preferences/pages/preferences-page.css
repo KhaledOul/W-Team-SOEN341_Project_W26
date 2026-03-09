@@ -18,7 +18,7 @@
   padding: var(--space-lg) 2.5rem;
   max-width: 600px;
   width: 100%;
-  box-shadow: 0 2px var(--space-sm) rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px var(--space-sm) rgb(0 0 0 / 8%);
 }
 
 .meal-pref-nav {
@@ -73,7 +73,7 @@
 }
 
 .option-item:hover {
-  background-color: rgba(113, 131, 85, 0.1);
+  background-color: rgb(113 131 85 / 10%);
 }
 
 .option-item input[type="radio"],
@@ -108,7 +108,7 @@
 .save-button:hover {
   background-color: var(--palm-leaf);
   transform: translateY(-2px);
-  box-shadow: 0 2px var(--space-sm) rgba(113, 131, 85, 0.3);
+  box-shadow: 0 2px var(--space-sm) rgb(113 131 85 / 30%);
 }
 
 .save-button:focus {
@@ -120,7 +120,7 @@
   transform: translateY(0);
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .options-group {
     grid-template-columns: 1fr;
   }

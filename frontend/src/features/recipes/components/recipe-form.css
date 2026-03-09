@@ -1,10 +1,7 @@
 .recipe-form-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background-color: rgb(0 0 0 / 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,9 +14,8 @@
   max-height: 85vh;
   background: var(--frosted-mint);
   border-radius: var(--space-sm);
-  box-shadow: 0 2px var(--space-md) rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px var(--space-md) rgb(0 0 0 / 20%);
   overflow: hidden;
-
   display: flex;
   flex-direction: column;
 }
@@ -29,7 +25,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   padding: var(--space-md) var(--space-md);
   border-bottom: 1px solid var(--muted-olive);
   flex-shrink: 0;
@@ -48,7 +43,6 @@
   border-radius: var(--space-sm);
   border: none;
   cursor: pointer;
-
   background: var(--tea-green);
   color: var(--dusty-olive);
   font-size: 22px;
@@ -108,7 +102,7 @@
 .form-group textarea:focus,
 .form-group select:focus {
   border-color: var(--dusty-olive);
-  box-shadow: 0 0 0 3px rgba(113, 131, 85, 0.15);
+  box-shadow: 0 0 0 3px rgb(113 131 85 / 15%);
 }
 
 /* ROWS */
@@ -129,12 +123,10 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-sm);
-
   padding: var(--space-sm) 14px;
   border: 1px solid var(--muted-olive);
   border-radius: 999px;
   background: var(--tea-green);
-
   cursor: pointer;
   user-select: none;
   transition: 0.15s ease;
@@ -154,7 +146,7 @@
 /* ERRORS */
 .error {
   border-color: #c53030 !important;
-  box-shadow: 0 0 0 3px rgba(197, 48, 48, 0.12) !important;
+  box-shadow: 0 0 0 3px rgb(197 48 48 / 12%) !important;
 }
 
 .error-message {
@@ -214,7 +206,7 @@
 }
 
 /* MOBILE */
-@media (max-width: 700px) {
+@media (width <= 700px) {
   .recipe-form-container {
     max-width: 100%;
     max-height: 90vh;

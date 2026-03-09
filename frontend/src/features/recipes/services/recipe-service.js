@@ -51,7 +51,7 @@ export async function createRecipe(userId, authorName, recipeData) {
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
         });
-        console.log("Recipe saved to Firestore with ID:", docRef.id);
+        console.warn("Recipe saved to Firestore with ID:", docRef.id);
         return docRef;
     } catch (err) {
         console.error("Firestore write failed:", err.code, err.message);

@@ -1,4 +1,4 @@
-name: CI - Test Suite
+name: CI
 
 on:
   push:
@@ -6,32 +6,97 @@ on:
   pull_request:
     branches: [main, develop]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  playwright:
-    name: Run Playwright Tests
+
+  # ─── Install ──────────────────────────────────────────────────────────────
+  install:
+    name: Install dependencies
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+  # ─── Lint (JS/React) ──────────────────────────────────────────────────────
+  lint-js:
+    name: Lint — React & JS (ESLint)
+    runs-on: ubuntu-latest
+    needs: install
+    continue-on-error: false
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+  # ─── Lint (CSS) ───────────────────────────────────────────────────────────
+  lint-css:
+    name: Lint — CSS (Stylelint)
+    runs-on: ubuntu-latest
+    needs: install
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - name: Run Stylelint
+        run: npm run lint:css
+
+  # ─── Build ────────────────────────────────────────────────────────────────
+  build:
+    name: Build (Vite)
+    runs-on: ubuntu-latest
+    needs: [install, lint-js]
     defaults:
       run:
         working-directory: frontend
     env:
       CI: true
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 24.13.0
+          node-version: 24
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+      - run: npm ci
 
       - name: Validate required secrets
         env:
@@ -62,7 +127,7 @@ jobs:
             exit 1
           fi
 
-      - name: Build app
+      - name: Vite build
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
           VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
@@ -72,6 +137,43 @@ jobs:
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
         run: npm run build
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: frontend/dist/
+          retention-days: 1
+
+  # ─── Test (Playwright) ────────────────────────────────────────────────────
+  test:
+    name: Test (Playwright)
+    runs-on: ubuntu-latest
+    needs: build
+    defaults:
+      run:
+        working-directory: frontend
+    env:
+      CI: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: frontend/dist/
 
       - name: Run Playwright tests
         env:

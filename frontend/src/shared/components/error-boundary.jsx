@@ -32,7 +32,7 @@ export default class ErrorBoundary extends React.Component {
                     </span>
                     <h2 style={{ margin: "0 0 8px" }}>Something went wrong</h2>
                     <p style={{ margin: "0 0 16px", opacity: 0.7 }}>
-                        Please try refreshing the page.
+                        {this.state.error?.message || "Please try refreshing the page."}
                     </p>
                     <button onClick={() => window.location.reload()}>
                         Refresh

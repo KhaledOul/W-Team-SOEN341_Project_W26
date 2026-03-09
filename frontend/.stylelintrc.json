@@ -1,0 +1,21 @@
+{
+  "extends": [
+    "stylelint-config-standard"
+  ],
+  "rules": {
+    "color-no-invalid-hex": true,
+    "declaration-block-no-duplicate-properties": true,
+    "no-duplicate-selectors": true,
+    "no-descending-specificity": null,
+    "selector-class-pattern": null,
+    "color-named": "always-where-possible",
+    "custom-property-pattern": null
+  },
+  "ignoreFiles": [
+    "dist/**",
+    "node_modules/**",
+    "coverage/**",
+    "playwright-report/**",
+    "test-results/**"
+  ]
+}
