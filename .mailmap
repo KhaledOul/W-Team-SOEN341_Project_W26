@@ -1,0 +1,24 @@
+# .mailmap — canonical identity map for the team
+# Format reference: https://git-scm.com/docs/gitmailmap
+# Syntax: Canonical Name <canonical@email.com> Old Name <old@email.com>
+#
+# Run `git shortlog -sen` after adding this file to verify identities merged correctly
+
+# ─── Khaled Oulhaci ──────────────────────────────────────────────────────────
+Khaled Oulhaci <150398587+KhaledOul@users.noreply.github.com> KhaledOul <150398587+KhaledOul@users.noreply.github.com>
+
+# ─── Jacob Atallah ───────────────────────────────────────────────────────────
+Jacob Atallah <jacobatallah@Jacobs-MacBook-Air.local> Jacob Atallah <jacobatallah@Jacobs-MacBook-Air.local>
+
+# ─── Guyass Rozybakiev ───────────────────────────────────────────────────────
+Guyass Rozybakiev <rozzybakiev@gmail.com> Guyass Rozybakiev <95832166+rozybakievv@users.noreply.github.com>
+
+# ─── Huu Tin Pham ────────────────────────────────────────────────────────────
+Huu Tin Pham <phtintin2004@gmail.com> Tin Pham <phtintin2004@gmail.com>
+Huu Tin Pham <phtintin2004@gmail.com> Huu Tin Pham <126339351+phamous04@users.noreply.github.com>
+
+# ─── Jingyu Zeng ─────────────────────────────────────────────────────────────
+Jingyu Zeng <zengjingyu2019@hotmail.com> jingyu727 <zengjingyu2019@hotmail.com>
+
+# ─── Deep Patel ──────────────────────────────────────────────────────────────
+Deep Patel <deep.patel0418@gmail.com>
