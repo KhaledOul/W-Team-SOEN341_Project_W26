@@ -18,12 +18,8 @@ const request = async (method, path, body = null, token = null) => {
   const response = await fetch(`${BASE_URL}${path}`, config);
 
   if (!response.ok) {
-    const error = await response
-      .json()
-      .catch(() => ({ error: response.statusText }));
-    throw new Error(
-      error.error || `Request failed with status ${response.status}`,
-    );
+    const error = await response.json().catch(() => ({ error: response.statusText }));
+    throw new Error(error.error || `Request failed with status ${response.status}`);
   }
 
   return response.json();
