@@ -51,7 +51,9 @@ export function getCurrentISOWeek() {
 export function isoWeekToDateRange(isoWeek) {
   const regex = /^\d{4}-W(0[1-9]|[1-4]\d|5[0-3])$/;
   if (!regex.test(isoWeek)) {
-    throw new Error(`isoWeekToDateRange: invalid isoWeek format "${isoWeek}". Expected "YYYY-Www".`);
+    throw new Error(
+      `isoWeekToDateRange: invalid isoWeek format "${isoWeek}". Expected "YYYY-Www".`
+    );
   }
 
   const [yearStr, weekStr] = isoWeek.split('-W');
