@@ -23,9 +23,7 @@ function applyUpdatedEntry(currentMealPlan, updatedEntry) {
     return currentMealPlan;
   }
 
-  const existingIndex = currentMealPlan.entries.findIndex(
-    (entry) => entry.id === updatedEntry.id
-  );
+  const existingIndex = currentMealPlan.entries.findIndex((entry) => entry.id === updatedEntry.id);
 
   if (existingIndex === -1) {
     return {
@@ -95,15 +93,9 @@ export function useMealPlan(isoWeek) {
     const previousMealPlan = mealPlan;
 
     setError(null);
-    setMealPlan((currentMealPlan) =>
-      applyEntryUpdate(currentMealPlan, entryId, patch)
-    );
+    setMealPlan((currentMealPlan) => applyEntryUpdate(currentMealPlan, entryId, patch));
 
-    const { data, error: serviceError } = await updateMealEntryRequest(
-      mealPlan.id,
-      entryId,
-      patch
-    );
+    const { data, error: serviceError } = await updateMealEntryRequest(mealPlan.id, entryId, patch);
 
     if (serviceError) {
       setMealPlan(previousMealPlan);
@@ -111,9 +103,7 @@ export function useMealPlan(isoWeek) {
       return { data: null, error: serviceError };
     }
 
-    setMealPlan((currentMealPlan) =>
-      applyUpdatedEntry(currentMealPlan, data)
-    );
+    setMealPlan((currentMealPlan) => applyUpdatedEntry(currentMealPlan, data));
 
     return { data, error: null };
   }

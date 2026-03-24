@@ -1,11 +1,4 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  serverTimestamp,
-  setDoc,
-} from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, serverTimestamp, setDoc } from 'firebase/firestore';
 import { api } from '../api/client';
 import { auth, db } from './firebase';
 
@@ -68,8 +61,7 @@ function validateMealEntryPatch(patch) {
 
   if (
     Object.hasOwn(patch, 'dayOfWeek') &&
-    (typeof patch.dayOfWeek !== 'string' ||
-      !VALID_DAY_OF_WEEK.has(patch.dayOfWeek))
+    (typeof patch.dayOfWeek !== 'string' || !VALID_DAY_OF_WEEK.has(patch.dayOfWeek))
   ) {
     throw new Error(
       'dayOfWeek must be one of: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday'
@@ -78,8 +70,7 @@ function validateMealEntryPatch(patch) {
 
   if (
     Object.hasOwn(patch, 'mealType') &&
-    (typeof patch.mealType !== 'string' ||
-      !VALID_MEAL_TYPES.has(patch.mealType))
+    (typeof patch.mealType !== 'string' || !VALID_MEAL_TYPES.has(patch.mealType))
   ) {
     throw new Error('mealType must be one of: breakfast, lunch, dinner, snack');
   }
