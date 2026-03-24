@@ -1,3 +1,4 @@
+import React from 'react';
 import { AuthProvider } from '../features/auth/context/auth-context';
 import { RecipeProvider } from '../features/recipes/context/recipe-context';
 import ErrorBoundary from '../shared/components/error-boundary';
