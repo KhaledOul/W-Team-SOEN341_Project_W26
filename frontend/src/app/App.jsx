@@ -8,7 +8,6 @@ export default function AppProviders({ children }) {
       <AuthProvider>
         <RecipeProvider>{children}</RecipeProvider>
       </AuthProvider>
-      
     </ErrorBoundary>
   );
 }
