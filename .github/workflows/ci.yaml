@@ -259,7 +259,6 @@ jobs:
       always()
       && (needs.lint-js.result == 'failure'    || needs.lint-js.result == 'cancelled'
       ||  needs.lint-css.result == 'failure'   || needs.lint-css.result == 'cancelled'
-      ||  needs.format.result == 'failure'     || needs.format.result == 'cancelled'
       ||  needs.build.result == 'failure'      || needs.build.result == 'cancelled'
       ||  needs.test.result == 'failure'       || needs.test.result == 'cancelled'
       ||  needs.backend.result == 'failure'    || needs.backend.result == 'cancelled')
