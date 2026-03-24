@@ -253,7 +253,8 @@ jobs:
     needs: [lint-js, lint-css, format, build, test, backend]
     if: >-
       failure()
-      && github.event_name == 'push'
+      && (github.event_name == 'push'
+      || github.event_name == 'pull_request')
     steps:
       - uses: actions/checkout@v4
         with:
