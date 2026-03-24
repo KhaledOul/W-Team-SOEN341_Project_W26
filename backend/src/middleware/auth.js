@@ -1,15 +1,4 @@
-import admin from 'firebase-admin';
-
-// Initialize Admin SDK once using service account from environment
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    }),
-  });
-}
+import { adminAuth } from '../firebaseAdmin.js';
 
 export const verifyToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -23,7 +12,7 @@ export const verifyToken = async (req, res, next) => {
   const token = authHeader.split('Bearer ')[1];
 
   try {
-    const decoded = await admin.auth().verifyIdToken(token);
+    const decoded = await adminAuth.verifyIdToken(token);
     req.user = decoded; // uid, email, etc. now available in route handlers
     next();
   } catch (err) {
