@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import { errorHandler } from './middleware/errorHandler.js';
+import mealPlanRoutes from './routes/mealPlans.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -21,6 +22,8 @@ app.use(express.json());
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+
+app.use('/api/meal-plans', mealPlanRoutes);
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
 // Import and mount route files here as they are created.
