@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/context/auth-context';
 import * as preferencesService from '../services/preferences-service';
 import './preferences-page.css';
@@ -8,6 +9,7 @@ const ALLERGY_OPTIONS = ['Peanuts', 'Dairy', 'Gluten', 'Shellfish', 'Soy', 'Nuts
 
 const PreferencesPage = () => {
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
   const [userName, setUserName] = useState('User');
   const [selectedDiet, setSelectedDiet] = useState([]);
   const [selectedAllergies, setSelectedAllergies] = useState([]);
@@ -64,6 +66,10 @@ const PreferencesPage = () => {
     );
   };
 
+  const handleBackToHome = () => {
+    navigate('/home');
+  };
+
   const handleSave = () => {
     if (!currentUser) return;
 
@@ -107,7 +113,11 @@ const PreferencesPage = () => {
 
   return (
     <div className="meal-preferences-container">
+       <button className="back-button" onClick={handleBackToHome}>
+          ← Back to Home
+        </button>
       <div className="preferences-card">
+       
         <div className="user-greeting">Hello, {userName}!</div>
 
         <h1>Meal Preferences</h1>
