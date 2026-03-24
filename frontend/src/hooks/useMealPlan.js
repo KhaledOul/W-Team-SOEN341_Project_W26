@@ -1,17 +1,47 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { auth } from '../services/firebase';
-import { createMealPlan } from '../services/mealPlanService';
+import {
+  createMealPlan,
+  updateMealEntry as updateMealEntryRequest,
+} from '../services/mealPlanService';
 
-/**
- * Custom React hook that ensures a meal plan exists for the given ISO week
- * and provides it to the consuming component.
- *
- * On mount (or when `isoWeek` changes) the hook calls `createMealPlan`,
- * which is idempotent — it returns the existing document if one already exists.
- *
- * @param {string} isoWeek — ISO week string, e.g. "2025-W20"
- * @returns {{ mealPlan: object|null, loading: boolean, error: string|null }}
- */
+function applyEntryUpdate(currentMealPlan, entryId, patch) {
+  if (!currentMealPlan || !Array.isArray(currentMealPlan.entries)) {
+    return currentMealPlan;
+  }
+
+  return {
+    ...currentMealPlan,
+    entries: currentMealPlan.entries.map((entry) =>
+      entry.id === entryId ? { ...entry, ...patch } : entry
+    ),
+  };
+}
+
+function applyUpdatedEntry(currentMealPlan, updatedEntry) {
+  if (!currentMealPlan || !Array.isArray(currentMealPlan.entries)) {
+    return currentMealPlan;
+  }
+
+  const existingIndex = currentMealPlan.entries.findIndex(
+    (entry) => entry.id === updatedEntry.id
+  );
+
+  if (existingIndex === -1) {
+    return {
+      ...currentMealPlan,
+      entries: [...currentMealPlan.entries, updatedEntry],
+    };
+  }
+
+  return {
+    ...currentMealPlan,
+    entries: currentMealPlan.entries.map((entry) =>
+      entry.id === updatedEntry.id ? updatedEntry : entry
+    ),
+  };
+}
+
 export function useMealPlan(isoWeek) {
   const [mealPlan, setMealPlan] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -26,6 +56,7 @@ export function useMealPlan(isoWeek) {
       setMealPlan(null);
 
       const user = auth.currentUser;
+
       if (!user) {
         setError('User is not authenticated');
         setLoading(false);
@@ -34,7 +65,9 @@ export function useMealPlan(isoWeek) {
 
       const { data, error: serviceError } = await createMealPlan(user.uid, isoWeek);
 
-      if (cancelled) return;
+      if (cancelled) {
+        return;
+      }
 
       if (serviceError) {
         setError(serviceError);
@@ -52,5 +85,38 @@ export function useMealPlan(isoWeek) {
     };
   }, [isoWeek]);
 
-  return { mealPlan, loading, error };
+  async function updateEntry(entryId, patch) {
+    if (!mealPlan?.id) {
+      const nextError = 'Meal plan is not loaded';
+      setError(nextError);
+      return { data: null, error: nextError };
+    }
+
+    const previousMealPlan = mealPlan;
+
+    setError(null);
+    setMealPlan((currentMealPlan) =>
+      applyEntryUpdate(currentMealPlan, entryId, patch)
+    );
+
+    const { data, error: serviceError } = await updateMealEntryRequest(
+      mealPlan.id,
+      entryId,
+      patch
+    );
+
+    if (serviceError) {
+      setMealPlan(previousMealPlan);
+      setError(serviceError);
+      return { data: null, error: serviceError };
+    }
+
+    setMealPlan((currentMealPlan) =>
+      applyUpdatedEntry(currentMealPlan, data)
+    );
+
+    return { data, error: null };
+  }
+
+  return { mealPlan, loading, error, updateEntry };
 }
