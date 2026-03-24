@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { useRoutes } from 'react-router-dom';
 
 const LandingPage = lazy(() => import('../features/landing/pages/landing-page'));
@@ -32,6 +32,7 @@ export default function AppRouter() {
     { path: '/home', element: <HomePage /> },
     { path: '/mealpreferences', element: <PreferencesPage /> },
     { path: '/recipes', element: <RecipesPage /> },
+
     { path: '*', element: <LandingPage /> },
   ]);
 
