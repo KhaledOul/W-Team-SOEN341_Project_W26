@@ -59,7 +59,7 @@ jobs:
     name: Lint — CSS (Stylelint)
     runs-on: ubuntu-latest
     needs: install
-    continue-on-error: true
+    continue-on-error: false
     defaults:
       run:
         working-directory: frontend
@@ -103,7 +103,7 @@ jobs:
   build:
     name: Build (Vite)
     runs-on: ubuntu-latest
-    needs: [install, lint-js]
+    needs: [install, lint-js, lint-css, format]
     defaults:
       run:
         working-directory: frontend
@@ -250,18 +250,27 @@ jobs:
   rollback:
     name: Rollback on failure
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     needs: [lint-js, lint-css, format, build, test, backend]
     if: >-
-      failure()
-      && (github.event_name == 'push'
-      || github.event_name == 'pull_request')
+      always()
+      && (needs.lint-js.result == 'failure'    || needs.lint-js.result == 'cancelled'
+      ||  needs.lint-css.result == 'failure'   || needs.lint-css.result == 'cancelled'
+      ||  needs.format.result == 'failure'     || needs.format.result == 'cancelled'
+      ||  needs.build.result == 'failure'      || needs.build.result == 'cancelled'
+      ||  needs.test.result == 'failure'       || needs.test.result == 'cancelled'
+      ||  needs.backend.result == 'failure'    || needs.backend.result == 'cancelled')
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Revert to previous commit
+      # ── Push events: revert the commit ──
+      - name: Revert commit (push)
+        if: github.event_name == 'push'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -269,3 +278,28 @@ jobs:
           git revert --no-edit HEAD
           git push origin ${{ github.ref_name }}
 
+      # ── PR events: post a comment on the pull request ──
+      - name: Comment on PR (pull_request)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const jobs = [
+              ['lint-js',  '${{ needs.lint-js.result }}'],
+              ['lint-css', '${{ needs.lint-css.result }}'],
+              ['format',   '${{ needs.format.result }}'],
+              ['build',    '${{ needs.build.result }}'],
+              ['test',     '${{ needs.test.result }}'],
+              ['backend',  '${{ needs.backend.result }}'],
+            ];
+            const failed = jobs
+              .filter(([, r]) => r === 'failure' || r === 'cancelled')
+              .map(([n, r]) => `- **${n}**: ${r}`)
+              .join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: `## ⛔ Pipeline failed — rollback triggered\n\nThe following jobs did not pass:\n${failed}\n\nPlease fix the issues before merging.`,
+            });
