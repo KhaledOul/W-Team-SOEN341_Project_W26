@@ -285,9 +285,14 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           echo "::warning::Pipeline failed — reverting commit $(git rev-parse HEAD)"
           git revert --no-edit HEAD
-          git commit --amend --no-edit --author="ddeeeeeppp <deep.patel0418@gmail.com>"
           if [ "${{ github.event_name }}" = "push" ]; then
             git push origin ${{ github.ref_name }}
           else
             git push origin ${{ github.head_ref }}
+          fi
+          git commit --amend --no-edit --author="ddeeeeeppp <deep.patel0418@gmail.com>"
+          if [ "${{ github.event_name }}" = "push" ]; then
+            git push --force-with-lease origin ${{ github.ref_name }}
+          else
+            git push --force-with-lease origin ${{ github.head_ref }}
           fi
