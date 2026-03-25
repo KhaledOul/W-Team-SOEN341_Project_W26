@@ -1,0 +1,288 @@
+.week-grid-container {
+  width: 100%;
+  overflow-x: auto;
+  margin: 2rem 0;
+}
+
+.week-grid {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.week-grid__day-header,
+.week-grid__meal-type-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: none;
+}
+
+.week-grid__meal-type-header {
+  width: 100px;
+}
+
+.week-grid__day-header {
+  min-width: 150px;
+}
+
+.week-grid__meal-type-label {
+  background: #f8f9fa;
+  font-weight: 600;
+  text-transform: capitalize;
+  padding: 1rem;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  border-right: 2px solid #e9ecef;
+}
+
+.week-grid__row {
+  border-bottom: 1px solid #e9ecef;
+}
+
+.week-grid__row:last-child {
+  border-bottom: none;
+}
+
+.week-grid__cell {
+  padding: 0.5rem;
+  min-width: 150px;
+  height: 200px;
+  vertical-align: top;
+  border-right: 1px solid #e9ecef;
+}
+
+.week-grid__cell:last-child {
+  border-right: none;
+}
+
+.week-grid__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #adb5bd;
+  font-style: italic;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 2px dashed #e9ecef;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  background: #f8f9fa;
+}
+
+.week-grid__empty:hover {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.05);
+  color: #667eea;
+}
+
+.week-grid__empty-text {
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.week-grid__empty-icon {
+  font-size: 1.5rem;
+}
+
+.week-grid__filled {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.week-grid__recipe-thumbnail {
+  flex: 0 0 auto;
+  height: 80px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #f8f9fa;
+}
+
+.week-grid__recipe-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.week-grid__recipe-title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #212529;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.2;
+}
+
+.week-grid__remove-btn {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+}
+
+.week-grid__remove-btn:hover {
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+}
+
+.week-grid__remove-btn .material-icons {
+  font-size: 1.2rem;
+}
+
+.grid-cell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.grid-cell__thumbnail {
+  flex: 0 0 auto;
+  height: 100px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #f8f9fa;
+}
+
+.grid-cell__thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.grid-cell__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
+}
+
+.grid-cell__title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #212529;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.2;
+}
+
+.grid-cell__remove-btn {
+  flex: 0 0 auto;
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.grid-cell__remove-btn:hover {
+  background: rgba(220, 53, 69, 0.1);
+  color: #c82333;
+}
+
+.grid-cell__remove-btn .material-icons {
+  font-size: 1.2rem;
+}
+
+.week-grid__loading {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+  font-size: 1rem;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 1200px) {
+  .week-grid__day-header,
+  .week-grid__cell {
+    min-width: 120px;
+    font-size: 0.85rem;
+  }
+
+  .grid-cell__thumbnail {
+    height: 80px;
+  }
+
+  .grid-cell__title {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .week-grid-container {
+    margin: 1rem 0;
+  }
+
+  .week-grid__day-header,
+  .week-grid__cell {
+    min-width: 100px;
+    padding: 0.25rem;
+    height: 160px;
+  }
+
+  .grid-cell {
+    padding: 0.25rem;
+    gap: 0.25rem;
+  }
+
+  .grid-cell__thumbnail {
+    height: 60px;
+  }
+
+  .grid-cell__title {
+    font-size: 0.7rem;
+  }
+
+  .grid-cell__remove-btn .material-icons {
+    font-size: 1rem;
+  }
+}
