@@ -91,9 +91,9 @@ export default function WeekPlannerPage() {
     <div className="week-planner">
       <div className="week-planner__header">
         <h1 className="week-planner__title">Weekly Meal Plan</h1>
-
+        
         <div className="week-planner__nav">
-          <button
+          <button 
             className="week-planner__nav-btn week-planner__nav-btn--prev"
             onClick={handlePreviousWeek}
             title="Previous week"
@@ -102,8 +102,8 @@ export default function WeekPlannerPage() {
           </button>
 
           <div className="week-planner__week-picker">
-            <select
-              value={currentWeek}
+            <select 
+              value={currentWeek} 
               onChange={handleWeekChange}
               className="week-planner__week-select"
               title="Jump to a specific week"
@@ -121,7 +121,7 @@ export default function WeekPlannerPage() {
             </select>
           </div>
 
-          <button
+          <button 
             className="week-planner__nav-btn week-planner__nav-btn--next"
             onClick={handleNextWeek}
             title="Next week"

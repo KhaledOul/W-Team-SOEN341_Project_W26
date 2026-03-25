@@ -56,10 +56,7 @@ const HomePage = () => {
             </span>
             Recipes
           </button>
-          <button
-            className="home-btn shopping"
-            onClick={() => navigate(`/week-planner/${getCurrentISOWeek()}`)}
-          >
+          <button className="home-btn shopping" onClick={() => navigate(`/week-planner/${getCurrentISOWeek()}`)}>
             <span
               className="material-icons"
               style={{ fontSize: '24px', marginRight: 'var(--space-sm)', verticalAlign: 'middle' }}

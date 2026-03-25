@@ -8,9 +8,7 @@ const HomePage = lazy(() => import('../features/landing/pages/home-page'));
 const PreferencesPage = lazy(() => import('../features/meal-preferences/pages/preferences-page'));
 const RecipesPage = lazy(() => import('../features/recipes/pages/recipes-page'));
 const WeekPlannerPage = lazy(() => import('../features/recipes/week_planner/pages/week-planner'));
-const WeekPlannerRedirect = lazy(
-  () => import('../features/recipes/week_planner/pages/week-planner-redirect')
-);
+const WeekPlannerRedirect = lazy(() => import('../features/recipes/week_planner/pages/week-planner-redirect'));
 
 const fallback = (
   <div
