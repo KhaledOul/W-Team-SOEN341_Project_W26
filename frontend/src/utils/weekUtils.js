@@ -95,7 +95,7 @@ export function getWeekLabel(isoWeek) {
   const { start, end } = isoWeekToDateRange(isoWeek);
   const [, weekNumStr] = isoWeek.split('-W');
   const weekNum = parseInt(weekNumStr, 10);
-  
+
   const formatDate = (date) => {
     const month = date.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
     const day = date.getUTCDate();

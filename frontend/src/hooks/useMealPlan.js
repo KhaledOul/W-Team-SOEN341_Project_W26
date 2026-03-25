@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { auth } from '../services/firebase';
 import {
-  assignMealEntry as assignMealEntryRequest,
-  createMealPlan,
-  deleteMealEntry as deleteMealEntryRequest,
-  getMealPlan,
-  updateMealEntry as updateMealEntryRequest,
+    assignMealEntry as assignMealEntryRequest,
+    createMealPlan,
+    deleteMealEntry as deleteMealEntryRequest,
+    getMealPlan,
+    updateMealEntry as updateMealEntryRequest,
 } from '../services/mealPlanService';
 
 function applyEntryUpdate(currentMealPlan, entryId, patch) {
@@ -59,52 +59,52 @@ export function useMealPlan(isoWeek) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-useEffect(() => {
-  let cancelled = false;
+  useEffect(() => {
+    let cancelled = false;
 
-  const unsubscribe = auth.onAuthStateChanged(async (user) => {
-    if (cancelled) return;
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (cancelled) return;
 
-    if (!user) {
-      setError('User is not authenticated');
+      if (!user) {
+        setError('User is not authenticated');
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+      setMealPlan(null);
+
+      // First try to get existing meal plan
+      const { data: existingData } = await getMealPlan(user.uid, isoWeek);
+
+      if (cancelled) return;
+
+      if (existingData) {
+        setMealPlan(existingData);
+        setLoading(false);
+        return;
+      }
+
+      // If not found, create new meal plan
+      const { data: newData, error: createError } = await createMealPlan(user.uid, isoWeek);
+
+      if (cancelled) return;
+
+      if (createError) {
+        setError(createError);
+      } else {
+        setMealPlan(newData);
+      }
+
       setLoading(false);
-      return;
-    }
+    });
 
-    setLoading(true);
-    setError(null);
-    setMealPlan(null);
-
-    // First try to get existing meal plan
-    const { data: existingData, error: getError } = await getMealPlan(user.uid, isoWeek);
-
-    if (cancelled) return;
-
-    if (existingData) {
-      setMealPlan(existingData);
-      setLoading(false);
-      return;
-    }
-
-    // If not found, create new meal plan
-    const { data: newData, error: createError } = await createMealPlan(user.uid, isoWeek);
-
-    if (cancelled) return;
-
-    if (createError) {
-      setError(createError);
-    } else {
-      setMealPlan(newData);
-    }
-
-    setLoading(false);
-  });
-
-  return () => {
-    cancelled = true;
-    unsubscribe();
-  };
-}, [isoWeek]);
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
+  }, [isoWeek]);
 
   async function updateEntry(entryId, patch) {
     if (!mealPlan?.id) {
@@ -216,4 +216,3 @@ useEffect(() => {
 
   return { mealPlan, loading, error, updateEntry, removeEntry, assignEntry };
 }
-  

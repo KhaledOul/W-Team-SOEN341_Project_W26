@@ -1,6 +1,5 @@
-import { collection, getDocs } from 'firebase/firestore';
 import { api } from '../api/client';
-import { auth, db } from './firebase';
+import { auth } from './firebase';
 
 const ISO_WEEK_REGEX = /^\d{4}-W(0[1-9]|[1-4]\d|5[0-3])$/;
 
@@ -87,25 +86,6 @@ function validateMealEntryPatch(patch) {
   ) {
     throw new Error('mealType must be one of: breakfast, lunch, dinner, snack');
   }
-}
-
-async function getMealPlanEntries(week) {
-  const entriesSnapshot = await getDocs(collection(db, 'mealPlans', week, 'entries'));
-
-  return entriesSnapshot.docs.map((entrySnapshot) => ({
-    id: entrySnapshot.id,
-    ...entrySnapshot.data(),
-  }));
-}
-
-async function hydrateMealPlan(snapshot) {
-  const entries = await getMealPlanEntries(snapshot.id);
-
-  return {
-    id: snapshot.id,
-    ...snapshot.data(),
-    entries,
-  };
 }
 
 export async function createMealPlan(userId, isoWeek) {
