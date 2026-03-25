@@ -105,5 +105,64 @@ router.patch('/:week/entries/:entryId', verifyToken, async (req, res, next) => {
   }
 });
 
+router.post('/:week/assign', verifyToken, async (req, res, next) => {
+  const { week } = req.params;
+  const { recipeId, dayOfWeek, mealType } = req.body;
+
+  try {
+    if (!recipeId || typeof recipeId !== 'string') {
+      throw createHttpError(400, 'recipeId is required and must be a string');
+    }
+
+    if (
+      typeof dayOfWeek !== 'string' ||
+      !VALID_DAY_OF_WEEK.has(dayOfWeek)
+    ) {
+      throw createHttpError(
+        400,
+        'dayOfWeek must be one of: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday'
+      );
+    }
+
+    if (
+      typeof mealType !== 'string' ||
+      !VALID_MEAL_TYPES.has(mealType)
+    ) {
+      throw createHttpError(
+        400,
+        'mealType must be one of: breakfast, lunch, dinner, snack'
+      );
+    }
+
+    const recipeRef = adminDb.collection('recipes').doc(recipeId);
+    const recipeSnap = await recipeRef.get();
+
+    if (!recipeSnap.exists) {
+      throw createHttpError(404, 'Recipe not found');
+    }
+
+    const entryRef = adminDb
+      .collection('mealPlans')
+      .doc(week)
+      .collection('entries')
+      .doc(); 
+
+    const newEntry = {
+      recipeId,
+      dayOfWeek,
+      mealType,
+      createdAt: new Date().toISOString(),
+      userId: req.user?.uid || null, 
+    };
+
+    await entryRef.set(newEntry);
+    res.status(201).json({
+      id: entryRef.id,
+      ...newEntry,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default router;
