@@ -18,6 +18,42 @@ function createHttpError(status, message) {
   return error;
 }
 
+function buildMealAssignment(body) {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    throw createHttpError(400, 'Request body must be a JSON object');
+  }
+
+  const { recipeId, dayOfWeek, mealType } = body;
+
+  if (typeof recipeId !== 'string' || recipeId.trim() === '') {
+    throw createHttpError(400, 'recipeId is required and must be a non-empty string');
+  }
+
+  if (typeof dayOfWeek !== 'string' || !VALID_DAY_OF_WEEK.has(dayOfWeek)) {
+    throw createHttpError(
+      400,
+      'dayOfWeek must be one of: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday'
+    );
+  }
+
+  if (typeof mealType !== 'string' || !VALID_MEAL_TYPES.has(mealType)) {
+    throw createHttpError(
+      400,
+      'mealType must be one of: breakfast, lunch, dinner, snack'
+    );
+  }
+
+  return {
+    recipeId: recipeId.trim(),
+    dayOfWeek,
+    mealType,
+  };
+}
+
+function buildMealEntryId({ recipeId, dayOfWeek, mealType }) {
+  return `${dayOfWeek}__${mealType}__${recipeId}`;
+}
+
 function buildMealEntryPatch(body) {
   if (!body || typeof body !== 'object' || Array.isArray(body)) {
     throw createHttpError(400, 'Request body must be a JSON object');
@@ -39,7 +75,10 @@ function buildMealEntryPatch(body) {
 
   if (Object.hasOwn(body, 'dayOfWeek')) {
     if (typeof body.dayOfWeek !== 'string' || !VALID_DAY_OF_WEEK.has(body.dayOfWeek)) {
-      throw createHttpError(400, 'dayOfWeek must be one of: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday');
+      throw createHttpError(
+        400,
+        'dayOfWeek must be one of: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday'
+      );
     }
     patch.dayOfWeek = body.dayOfWeek;
   }
@@ -54,7 +93,7 @@ function buildMealEntryPatch(body) {
   return patch;
 }
 
-// ── GET /:week ───────────────────────────────────────────────────────────────
+// GET /:week
 router.get('/:week', verifyToken, async (req, res, next) => {
   const { week } = req.params;
 
@@ -75,147 +114,49 @@ router.get('/:week', verifyToken, async (req, res, next) => {
   }
 });
 
-// ── POST /:week/assign ──────────────────────────────────────────────────────
 router.post('/:week/assign', verifyToken, async (req, res, next) => {
   const { week } = req.params;
-  const { dayOfWeek, mealType, recipeId } = req.body;
 
   try {
-    if (!dayOfWeek || !VALID_DAY_OF_WEEK.has(dayOfWeek)) {
-      throw createHttpError(400, 'dayOfWeek must be one of: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday');
-    }
+    const assignment = buildMealAssignment(req.body);
+    const { recipeId, dayOfWeek, mealType } = assignment;
 
-    if (!mealType || !VALID_MEAL_TYPES.has(mealType)) {
-      throw createHttpError(400, 'mealType must be one of: breakfast, lunch, dinner, snack');
-    }
+    const entryId = buildMealEntryId({ recipeId, dayOfWeek, mealType });
 
-    if (!recipeId || typeof recipeId !== 'string') {
-      throw createHttpError(400, 'recipeId must be a non-empty string');
-    }
+    const entryRef = adminDb
+      .collection('mealPlans')
+      .doc(week)
+      .collection('entries')
+      .doc(entryId);
 
-    // Check if meal plan exists
-    const mealPlanRef = adminDb.collection('mealPlans').doc(week);
-    const mealPlanSnapshot = await mealPlanRef.get();
+    await adminDb.runTransaction(async (transaction) => {
+      const existingEntry = await transaction.get(entryRef);
 
-    if (!mealPlanSnapshot.exists) {
-      throw createHttpError(404, 'Meal plan not found');
-    }
+      if (existingEntry.exists) {
+        throw createHttpError(
+          409,
+          `Duplicate assignment detected: recipe ${recipeId} is already assigned to ${dayOfWeek} ${mealType} in week ${week}`
+        );
+      }
 
-    // Check if recipe exists
-    const recipeRef = adminDb.collection('recipes').doc(recipeId);
-    const recipeSnapshot = await recipeRef.get();
+      const timestamp = new Date().toISOString();
 
-    if (!recipeSnapshot.exists) {
-      throw createHttpError(404, 'Recipe not found');
-    }
-
-    // Check if entry already exists for this slot
-    const entriesRef = mealPlanRef.collection('entries');
-    const existingQuery = await entriesRef
-      .where('dayOfWeek', '==', dayOfWeek)
-      .where('mealType', '==', mealType)
-      .get();
-
-    if (!existingQuery.empty) {
-      throw createHttpError(409, 'Meal slot already occupied');
-    }
-
-    // Create new entry
-    const newEntry = {
-      dayOfWeek,
-      mealType,
-      recipeId,
-      recipe: recipeSnapshot.data(),
-      createdAt: new Date().toISOString(),
-    };
-
-    const entryRef = await entriesRef.add(newEntry);
-    const createdEntry = await entryRef.get();
-
-    res.status(201).json({ id: createdEntry.id, ...createdEntry.data() });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// ── POST / ───────────────────────────────────────────────────────────────────
-router.post('/', verifyToken, async (req, res, next) => {
-  const { isoWeek } = req.body;
-  const userId = req.user.uid;
-
-  try {
-    if (!isoWeek || !ISO_WEEK_REGEX.test(isoWeek)) {
-      throw createHttpError(400, 'isoWeek must match format "YYYY-Www"');
-    }
-
-    const docId = `${userId}_${isoWeek}`;
-    const docRef = adminDb.collection('mealPlans').doc(docId);
-    const existing = await docRef.get();
-
-    if (!existing.exists) {
-      await docRef.set({
-        userId,
-        isoWeek,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+      transaction.set(entryRef, {
+        recipeId,
+        dayOfWeek,
+        mealType,
+        createdAt: timestamp,
+        updatedAt: timestamp,
+        userId: req.user?.uid || null,
       });
-    }
+    });
 
-    const snapshot = await docRef.get();
-    const entriesSnapshot = await docRef.collection('entries').get();
-    const entries = entriesSnapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+    const savedEntry = await entryRef.get();
 
-    res.status(200).json({ id: snapshot.id, ...snapshot.data(), entries });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// ── PATCH /:week/entries/:entryId ─────────────────────────────────────────────
-router.patch('/:week/entries/:entryId', verifyToken, async (req, res, next) => {
-  const { week, entryId } = req.params;
-
-  try {
-    const patch = buildMealEntryPatch(req.body);
-    const entryRef = adminDb
-      .collection('mealPlans')
-      .doc(week)
-      .collection('entries')
-      .doc(entryId);
-
-    const existingEntry = await entryRef.get();
-
-    if (!existingEntry.exists) {
-      throw createHttpError(404, 'Meal plan entry not found');
-    }
-
-    await entryRef.update(patch);
-    const updatedEntry = await entryRef.get();
-
-    res.status(200).json({ id: updatedEntry.id, ...updatedEntry.data() });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// ── DELETE /:week/entries/:entryId ────────────────────────────────────────────
-router.delete('/:week/entries/:entryId', verifyToken, async (req, res, next) => {
-  const { week, entryId } = req.params;
-
-  try {
-    const entryRef = adminDb
-      .collection('mealPlans')
-      .doc(week)
-      .collection('entries')
-      .doc(entryId);
-
-    const existing = await entryRef.get();
-    if (!existing.exists) {
-      throw createHttpError(404, 'Meal plan entry not found');
-    }
-
-    await entryRef.delete();
-    res.status(204).send();
+    res.status(201).json({
+      id: savedEntry.id,
+      ...savedEntry.data(),
+    });
   } catch (error) {
     next(error);
   }
