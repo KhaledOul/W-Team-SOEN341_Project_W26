@@ -12,5 +12,22 @@ service cloud.firestore {
       allow read, write: if request.auth != null
                          && request.auth.uid == resource.data.userId;
     }
+
+    // Meal Plans collection
+    match /mealPlans/{mealPlanId} {
+      // Any authenticated user can create a meal plan
+      allow create: if request.auth != null;
+
+      // Only the meal plan owner can read, update, or delete
+      allow read, update, delete: if request.auth != null
+                                   && request.auth.uid == resource.data.userId;
+
+      // Meal Plan entries subcollection
+      match /entries/{entryId} {
+        // Inherit permissions from parent meal plan
+        allow read, create, update, delete: if request.auth != null
+                                             && get(/databases/$(database)/documents/mealPlans/$(mealPlanId)).data.userId == request.auth.uid;
+      }
+    }
   }
 }
