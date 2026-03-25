@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { verifyToken } from '../middleware/auth.js';
 import { adminDb } from '../firebaseAdmin.js';
+import { verifyToken } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -104,5 +104,6 @@ router.patch('/:week/entries/:entryId', verifyToken, async (req, res, next) => {
     next(error);
   }
 });
+
 
 export default router;

@@ -1,5 +1,5 @@
-import admin from 'firebase-admin';
 import 'dotenv/config';
+import admin from 'firebase-admin';
 
 function buildCredentialOptions() {
   const projectId = process.env.FIREBASE_PROJECT_ID;
