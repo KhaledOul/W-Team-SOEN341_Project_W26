@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../../auth/context/auth-context';
 import { useNavigate, Link } from 'react-router-dom';
+import { getCurrentISOWeek } from '../../../utils/weekUtils';
 import './home-page.css';
 
 const HomePage = () => {
@@ -55,7 +56,7 @@ const HomePage = () => {
             </span>
             Recipes
           </button>
-          <button className="home-btn shopping">
+          <button className="home-btn shopping" onClick={() => navigate(`/week-planner/${getCurrentISOWeek()}`)}>
             <span
               className="material-icons"
               style={{ fontSize: '24px', marginRight: 'var(--space-sm)', verticalAlign: 'middle' }}

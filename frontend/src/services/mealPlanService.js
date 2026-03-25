@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, serverTimestamp, setDoc } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { api } from '../api/client';
 import { auth, db } from './firebase';
 
@@ -18,6 +18,19 @@ const VALID_MEAL_TYPES = new Set(['breakfast', 'lunch', 'dinner', 'snack']);
 
 function mealPlanDocId(userId, isoWeek) {
   return `${userId}_${isoWeek}`;
+}
+
+function extractIsoWeekFromDocId(docId) {
+  // docId format: ${userId}_${isoWeek}
+  // isoWeek format: YYYY-Www
+  // Extract by finding the pattern YYYY-W
+  const match = docId.match(/(\d{4}-W\d{2})/);
+  if (match) {
+    return match[1];
+  }
+  // Fallback: assume last part after underscore
+  const parts = docId.split('_');
+  return parts[parts.length - 1];
 }
 
 function validateInputs(userId, isoWeek) {
@@ -99,31 +112,18 @@ export async function createMealPlan(userId, isoWeek) {
   try {
     validateInputs(userId, isoWeek);
 
-    const docId = mealPlanDocId(userId, isoWeek);
-    const docRef = doc(db, 'mealPlans', docId);
-    const existing = await getDoc(docRef);
+    const user = auth.currentUser;
+    if (!user) throw new Error('User is not authenticated');
 
-    if (existing.exists()) {
-      return { data: await hydrateMealPlan(existing), error: null };
-    }
+    const token = await user.getIdToken();
 
-    const newPlan = {
-      userId,
-      isoWeek,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    };
-
-    await setDoc(docRef, newPlan);
-
-    const created = await getDoc(docRef);
-
-    return { data: await hydrateMealPlan(created), error: null };
+    // ✅ Backend au lieu de Firestore directement
+    const data = await api.post('/meal-plans', { isoWeek }, token);
+    return { data, error: null };
   } catch (err) {
     if (import.meta.env.DEV) {
       console.error('[mealPlanService] createMealPlan failed:', err);
     }
-
     return { data: null, error: err.message };
   }
 }
@@ -132,20 +132,19 @@ export async function getMealPlan(userId, isoWeek) {
   try {
     validateInputs(userId, isoWeek);
 
-    const docId = mealPlanDocId(userId, isoWeek);
-    const docRef = doc(db, 'mealPlans', docId);
-    const snapshot = await getDoc(docRef);
+    const user = auth.currentUser;
+    if (!user) throw new Error('User is not authenticated');
 
-    if (!snapshot.exists()) {
-      return { data: null, error: null };
-    }
+    const token = await user.getIdToken();
 
-    return { data: await hydrateMealPlan(snapshot), error: null };
+    // ✅ Use GET endpoint to fetch existing meal plan
+    // Backend expects just the isoWeek, it adds userId internally
+    const data = await api.get(`/meal-plans/${encodeURIComponent(isoWeek)}`, token);
+    return { data, error: null };
   } catch (err) {
     if (import.meta.env.DEV) {
       console.error('[mealPlanService] getMealPlan failed:', err);
     }
-
     return { data: null, error: err.message };
   }
 }
@@ -162,8 +161,9 @@ export async function updateMealEntry(week, entryId, patch) {
     }
 
     const token = await user.getIdToken();
+    const isoWeek = extractIsoWeekFromDocId(week);
     const updatedEntry = await api.patch(
-      `/meal-plans/${encodeURIComponent(week)}/entries/${encodeURIComponent(entryId)}`,
+      `/meal-plans/${encodeURIComponent(isoWeek)}/entries/${encodeURIComponent(entryId)}`,
       patch,
       token
     );
@@ -174,6 +174,68 @@ export async function updateMealEntry(week, entryId, patch) {
       console.error('[mealPlanService] updateMealEntry failed:', err);
     }
 
+    return { data: null, error: err.message };
+  }
+}
+
+export async function deleteMealEntry(week, entryId) {
+  try {
+    validateMealEntryIdentifiers(week, entryId);
+
+    const user = auth.currentUser;
+
+    if (!user) {
+      throw new Error('User is not authenticated');
+    }
+
+    const token = await user.getIdToken();
+    const isoWeek = extractIsoWeekFromDocId(week);
+    await api.delete(
+      `/meal-plans/${encodeURIComponent(isoWeek)}/entries/${encodeURIComponent(entryId)}`,
+      token
+    );
+
+    return { data: null, error: null };
+  } catch (err) {
+    if (import.meta.env.DEV) {
+      console.error('[mealPlanService] deleteMealEntry failed:', err);
+    }
+
+    return { data: null, error: err.message };
+  }
+}
+
+export async function assignMealEntry(week, dayOfWeek, mealType, recipeId) {
+  try {
+    validateMealEntryIdentifiers(week, 'dummy'); // week validation
+    if (!VALID_DAY_OF_WEEK.has(dayOfWeek)) {
+      throw new Error('Invalid dayOfWeek');
+    }
+    if (!VALID_MEAL_TYPES.has(mealType)) {
+      throw new Error('Invalid mealType');
+    }
+    if (!recipeId || typeof recipeId !== 'string') {
+      throw new Error('Invalid recipeId');
+    }
+
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error('User is not authenticated');
+    }
+
+    const token = await user.getIdToken();
+    const isoWeek = extractIsoWeekFromDocId(week);
+    const newEntry = await api.post(
+      `/meal-plans/${encodeURIComponent(isoWeek)}/assign`,
+      { dayOfWeek, mealType, recipeId },
+      token
+    );
+
+    return { data: newEntry, error: null };
+  } catch (err) {
+    if (import.meta.env.DEV) {
+      console.error('[mealPlanService] assignMealEntry failed:', err);
+    }
     return { data: null, error: err.message };
   }
 }

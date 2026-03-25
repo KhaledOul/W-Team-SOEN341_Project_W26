@@ -73,3 +73,38 @@ export function isoWeekToDateRange(isoWeek) {
 
   return { start, end };
 }
+
+/**
+ * Add or subtract weeks from an ISO week string.
+ * @param {string} isoWeek — e.g. "2025-W20"
+ * @param {number} weeks — positive or negative number of weeks to add
+ * @returns {string} — ISO week string in "YYYY-Www" format
+ */
+export function addWeeks(isoWeek, weeks) {
+  const { start } = isoWeekToDateRange(isoWeek);
+  const newDate = new Date(start.getTime() + weeks * 7 * 86400000);
+  return getISOWeek(newDate);
+}
+
+/**
+ * Get a human-readable label for an ISO week (e.g., "Week 20: Jan 13 - Jan 19, 2025").
+ * @param {string} isoWeek — e.g. "2025-W20"
+ * @returns {string} — formatted week label
+ */
+export function getWeekLabel(isoWeek) {
+  const { start, end } = isoWeekToDateRange(isoWeek);
+  const [, weekNumStr] = isoWeek.split('-W');
+  const weekNum = parseInt(weekNumStr, 10);
+  
+  const formatDate = (date) => {
+    const month = date.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
+    const day = date.getUTCDate();
+    return `${month} ${day}`;
+  };
+
+  const startStr = formatDate(start);
+  const endStr = formatDate(end);
+  const year = start.getUTCFullYear();
+
+  return `Week ${weekNum}: ${startStr} - ${endStr}, ${year}`;
+}

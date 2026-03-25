@@ -1,6 +1,6 @@
-import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
+import express from 'express';
 import { errorHandler } from './middleware/errorHandler.js';
 import mealPlanRoutes from './routes/mealPlans.js';
 
@@ -17,6 +17,11 @@ app.use(
   }),
 );
 app.use(express.json());
+
+// ─── Root endpoint ───────────────────────────────────────────────────────────
+app.get('/', (req, res) => {
+  res.json({ message: 'Backend API is running', timestamp: new Date().toISOString() });
+});
 
 // ─── Health check ────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
