@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { auth } from '../services/firebase';
 import {
-    assignMealEntry as assignMealEntryRequest,
-    createMealPlan,
-    deleteMealEntry as deleteMealEntryRequest,
-    getMealPlan,
-    updateMealEntry as updateMealEntryRequest,
+  assignMealEntry as assignMealEntryRequest,
+  createMealPlan,
+  deleteMealEntry as deleteMealEntryRequest,
+  getMealPlan,
+  updateMealEntry as updateMealEntryRequest,
 } from '../services/mealPlanService';
 
 function applyEntryUpdate(currentMealPlan, entryId, patch) {

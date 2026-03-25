@@ -15,10 +15,6 @@ const VALID_DAY_OF_WEEK = new Set([
 
 const VALID_MEAL_TYPES = new Set(['breakfast', 'lunch', 'dinner', 'snack']);
 
-function mealPlanDocId(userId, isoWeek) {
-  return `${userId}_${isoWeek}`;
-}
-
 function extractIsoWeekFromDocId(docId) {
   // docId format: ${userId}_${isoWeek}
   // isoWeek format: YYYY-Www
