@@ -1,10 +1,7 @@
 .recipe-picker-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -20,7 +17,7 @@
   max-height: 80vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 30%);
 }
 
 .recipe-picker-modal-header {
@@ -52,7 +49,7 @@
 }
 
 .recipe-picker-modal-close:hover {
-  background: rgba(108, 117, 125, 0.1);
+  background: rgb(108 117 125 / 10%);
   color: #495057;
 }
 
@@ -115,7 +112,7 @@
 
 .recipe-picker-card:hover {
   border-color: #667eea;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  box-shadow: 0 4px 12px rgb(102 126 234 / 15%);
   transform: translateY(-2px);
 }
 
@@ -136,7 +133,7 @@
 }
 
 .recipe-picker-card-title {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.5rem;
   font-size: 1rem;
   font-weight: 600;
   color: #212529;
@@ -152,7 +149,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .recipe-picker-modal {
     max-height: 90vh;
     margin: 1rem;

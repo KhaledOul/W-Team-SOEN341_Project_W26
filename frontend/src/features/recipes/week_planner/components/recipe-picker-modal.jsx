@@ -19,7 +19,12 @@ export default function RecipePickerModal({ isOpen, onClose, onSelectRecipe, cur
         // Show all recipes instead of filtering by user
         // This allows users to see and use all available recipes
         if (import.meta.env.DEV) {
-          console.log('[RecipePickerModal] Loaded recipes:', data.length, 'CurrentUserId:', currentUserId);
+          console.warn(
+            '[RecipePickerModal] Loaded recipes:',
+            data.length,
+            'CurrentUserId:',
+            currentUserId
+          );
         }
         setRecipes(data);
         setLoading(false);
@@ -33,7 +38,7 @@ export default function RecipePickerModal({ isOpen, onClose, onSelectRecipe, cur
     return unsubscribe;
   }, [isOpen, currentUserId]);
 
-  const filteredRecipes = recipes.filter(recipe =>
+  const filteredRecipes = recipes.filter((recipe) =>
     (recipe.title || recipe.name || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -71,7 +76,9 @@ export default function RecipePickerModal({ isOpen, onClose, onSelectRecipe, cur
 
           {!loading && !error && filteredRecipes.length === 0 && (
             <div className="recipe-picker-empty">
-              {searchTerm ? 'No recipes found matching your search.' : 'No recipes available. Create some recipes first!'}
+              {searchTerm
+                ? 'No recipes found matching your search.'
+                : 'No recipes available. Create some recipes first!'}
             </div>
           )}
 

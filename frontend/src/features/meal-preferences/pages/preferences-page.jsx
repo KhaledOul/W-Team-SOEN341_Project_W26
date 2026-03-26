@@ -113,11 +113,10 @@ const PreferencesPage = () => {
 
   return (
     <div className="meal-preferences-container">
-       <button className="back-button" onClick={handleBackToHome}>
-          ← Back to Home
-        </button>
+      <button className="back-button" onClick={handleBackToHome}>
+        ← Back to Home
+      </button>
       <div className="preferences-card">
-       
         <div className="user-greeting">Hello, {userName}!</div>
 
         <h1>Meal Preferences</h1>

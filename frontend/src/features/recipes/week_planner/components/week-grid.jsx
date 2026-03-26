@@ -49,11 +49,7 @@ export default function WeekGrid({ entries, onRemoveRecipe, onAssignRecipe, load
                     {entry ? (
                       <GridCell entry={entry} onRemove={handleRemove} />
                     ) : (
-                      <EmptyCell
-                        dayOfWeek={day}
-                        mealType={mealType}
-                        onAssign={onAssignRecipe}
-                      />
+                      <EmptyCell dayOfWeek={day} mealType={mealType} onAssign={onAssignRecipe} />
                     )}
                   </td>
                 );
