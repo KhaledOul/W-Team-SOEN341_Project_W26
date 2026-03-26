@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { adminDb } from "../firebaseAdmin.js";
+import { getAdminDb } from "../firebaseAdmin.js";
 import { verifyToken } from "../middleware/auth.js";
 
 const router = Router();
@@ -83,6 +83,7 @@ router.get("/:week", verifyToken, async (req, res, next) => {
   const { week } = req.params;
 
   try {
+    const adminDb = getAdminDb();
     const docRef = adminDb.collection("mealPlans").doc(week);
     const snapshot = await docRef.get();
 
@@ -108,6 +109,8 @@ router.post("/:week/assign", verifyToken, async (req, res, next) => {
   const { dayOfWeek, mealType, recipeId } = req.body;
 
   try {
+    const adminDb = getAdminDb();
+
     if (!dayOfWeek || !VALID_DAY_OF_WEEK.has(dayOfWeek)) {
       throw createHttpError(
         400,
@@ -178,6 +181,8 @@ router.post("/", verifyToken, async (req, res, next) => {
   const userId = req.user.uid;
 
   try {
+    const adminDb = getAdminDb();
+
     if (!isoWeek || !ISO_WEEK_REGEX.test(isoWeek)) {
       throw createHttpError(400, 'isoWeek must match format "YYYY-Www"');
     }
@@ -213,6 +218,7 @@ router.patch("/:week/entries/:entryId", verifyToken, async (req, res, next) => {
   const { week, entryId } = req.params;
 
   try {
+    const adminDb = getAdminDb();
     const patch = buildMealEntryPatch(req.body);
     const entryRef = adminDb
       .collection("mealPlans")
@@ -243,6 +249,7 @@ router.delete(
     const { week, entryId } = req.params;
 
     try {
+      const adminDb = getAdminDb();
       const entryRef = adminDb
         .collection("mealPlans")
         .doc(week)
