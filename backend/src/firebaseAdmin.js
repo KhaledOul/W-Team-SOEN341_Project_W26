@@ -1,10 +1,18 @@
 import "dotenv/config";
 import admin from "firebase-admin";
 
+function readEnv(...keys) {
+  for (const key of keys) {
+    const value = process.env[key];
+    if (value) return value;
+  }
+  return undefined;
+}
+
 function buildCredentialOptions() {
-  const projectId = process.env.FIREBASE_PROJECT_ID;
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  const projectId = readEnv("FIREBASE_PROJECT_ID", "VITE_FIREBASE_PROJECT_ID");
+  const clientEmail = readEnv("FIREBASE_CLIENT_EMAIL");
+  const privateKey = readEnv("FIREBASE_PRIVATE_KEY")?.replace(/\\n/g, "\n");
 
   if (!projectId || !clientEmail || !privateKey) {
     return undefined;
