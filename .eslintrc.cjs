@@ -6,7 +6,7 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
-    "prettier"
+    "prettier",
   ],
   ignorePatterns: ["dist", ".eslintrc.cjs", "coverage"],
   parserOptions: { ecmaVersion: "latest", sourceType: "module" },
@@ -16,6 +16,6 @@ module.exports = {
     "no-console": ["warn", { allow: ["warn", "error"] }],
     "react/prop-types": "off",
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
-  }
+    "react-hooks/exhaustive-deps": "warn",
+  },
 };
