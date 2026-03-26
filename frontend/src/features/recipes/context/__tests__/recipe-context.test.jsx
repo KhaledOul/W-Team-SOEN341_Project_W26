@@ -1,7 +1,6 @@
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import { RecipeProvider, useRecipe } from '../recipe-context';
 import * as recipeService from '../../services/recipe-service';
+import { RecipeProvider, useRecipe } from '../recipe-context';
 
 /* ── Mock services ────────────────────────────────────────────────────────── */
 

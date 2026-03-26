@@ -1,7 +1,6 @@
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import { AuthProvider, useAuth } from '../auth-context';
 import { onAuthStateChanged } from 'firebase/auth';
+import { AuthProvider, useAuth } from '../auth-context';
 
 /* ── Firebase auth is globally mocked in src/test/setup.js ──────────────── */
 
