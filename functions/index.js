@@ -15,7 +15,7 @@ exports.generateRecipeFromPhoto = functions
     if (!context.auth) {
       throw new functions.https.HttpsError(
         "unauthenticated",
-        "You must be logged in.",
+        "You must be logged in."
       );
     }
 
@@ -25,14 +25,14 @@ exports.generateRecipeFromPhoto = functions
     if (!base64Image || typeof base64Image !== "string") {
       throw new functions.https.HttpsError(
         "invalid-argument",
-        "base64Image is required and must be a non-empty string.",
+        "base64Image is required and must be a non-empty string."
       );
     }
 
     if (!ALLOWED_MIME_TYPES.includes(mimeType)) {
       throw new functions.https.HttpsError(
         "invalid-argument",
-        `Invalid image type. Allowed types: ${ALLOWED_MIME_TYPES.join(", ")}`,
+        `Invalid image type. Allowed types: ${ALLOWED_MIME_TYPES.join(", ")}`
       );
     }
 
@@ -40,7 +40,7 @@ exports.generateRecipeFromPhoto = functions
     if (sizeInBytes > MAX_IMAGE_SIZE) {
       throw new functions.https.HttpsError(
         "invalid-argument",
-        "Image size exceeds the 10 MB limit.",
+        "Image size exceeds the 10 MB limit."
       );
     }
 
@@ -77,14 +77,14 @@ exports.generateRecipeFromPhoto = functions
       if (error.message === "PARSE_FAILURE") {
         throw new functions.https.HttpsError(
           "internal",
-          "Could not parse recipe from image.",
+          "Could not parse recipe from image."
         );
       }
 
       if (error.message === "INVALID_SCHEMA") {
         throw new functions.https.HttpsError(
           "internal",
-          "AI returned an incomplete recipe.",
+          "AI returned an incomplete recipe."
         );
       }
 
@@ -92,7 +92,7 @@ exports.generateRecipeFromPhoto = functions
       functions.logger.error("generateRecipeFromPhoto error:", error);
       throw new functions.https.HttpsError(
         "internal",
-        "AI service error. Please try again.",
+        "AI service error. Please try again."
       );
     }
   });

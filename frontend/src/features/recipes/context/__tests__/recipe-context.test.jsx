@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { RecipeProvider, useRecipe } from '../recipe-context';
 import * as recipeService from '../../services/recipe-service';
 
@@ -42,7 +42,7 @@ function renderWithRecipeProvider() {
   return render(
     <RecipeProvider>
       <RecipeConsumer />
-    </RecipeProvider>,
+    </RecipeProvider>
   );
 }
 
@@ -91,11 +91,9 @@ describe('RecipeContext / useRecipe', () => {
     await user.click(screen.getByRole('button', { name: /create/i }));
 
     await waitFor(() => {
-      expect(recipeService.createRecipe).toHaveBeenCalledWith(
-        'test-uid',
-        'Test User',
-        { title: 'New' },
-      );
+      expect(recipeService.createRecipe).toHaveBeenCalledWith('test-uid', 'Test User', {
+        title: 'New',
+      });
     });
   });
 

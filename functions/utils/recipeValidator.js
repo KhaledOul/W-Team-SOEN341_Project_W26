@@ -9,12 +9,18 @@ function validateRecipe(recipe) {
   }
 
   // prepTime: non-empty string
-  if (typeof recipe.prepTime !== "string" || recipe.prepTime.trim().length === 0) {
+  if (
+    typeof recipe.prepTime !== "string" ||
+    recipe.prepTime.trim().length === 0
+  ) {
     throw new Error("INVALID_SCHEMA");
   }
 
   // cookTime: non-empty string
-  if (typeof recipe.cookTime !== "string" || recipe.cookTime.trim().length === 0) {
+  if (
+    typeof recipe.cookTime !== "string" ||
+    recipe.cookTime.trim().length === 0
+  ) {
     throw new Error("INVALID_SCHEMA");
   }
 
@@ -41,10 +47,7 @@ function validateRecipe(recipe) {
     throw new Error("INVALID_SCHEMA");
   }
   for (const step of recipe.steps) {
-    if (
-      typeof step.step !== "number" ||
-      typeof step.instruction !== "string"
-    ) {
+    if (typeof step.step !== "number" || typeof step.instruction !== "string") {
       throw new Error("INVALID_SCHEMA");
     }
   }

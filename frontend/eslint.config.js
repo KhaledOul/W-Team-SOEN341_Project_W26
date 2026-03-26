@@ -75,4 +75,23 @@ export default [
       eqeqeq: ['error', 'always'],
     },
   },
+  {
+    files: ['src/**/*.{test,spec}.{js,jsx}', 'src/test/**/*.{js,jsx}', 'tests/**/*.{js,jsx}'],
+    languageOptions: {
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        vi: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+      },
+    },
+    rules: {
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      'no-undef': 'off',
+    },
+  },
 ];

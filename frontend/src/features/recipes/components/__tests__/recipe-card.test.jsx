@@ -45,7 +45,7 @@ describe('RecipeCard', () => {
     };
 
     expect(() =>
-      render(<RecipeCard recipe={recipe} onEdit={vi.fn()} onDelete={vi.fn()} />),
+      render(<RecipeCard recipe={recipe} onEdit={vi.fn()} onDelete={vi.fn()} />)
     ).not.toThrow();
   });
 

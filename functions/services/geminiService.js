@@ -19,7 +19,8 @@ Respond ONLY with a valid JSON object in this exact format, no markdown, no extr
   "tags": ["vegetarian", "baked"]
 }`;
 
-const RETRY_PROMPT = "Return only raw JSON, no explanation. Use the schema from before.";
+const RETRY_PROMPT =
+  "Return only raw JSON, no explanation. Use the schema from before.";
 
 function stripMarkdownFences(text) {
   let cleaned = text.trim();
@@ -50,9 +51,14 @@ async function generateRecipeFromImage(base64Image, mimeType) {
     return JSON.parse(cleaned);
   } catch (firstError) {
     // Retry once with a stricter prompt
-    functions.logger.warn("First JSON parse failed, retrying with strict prompt...");
+    functions.logger.warn(
+      "First JSON parse failed, retrying with strict prompt..."
+    );
 
-    const retryResponse = await model.generateContent([imagePart, RETRY_PROMPT]);
+    const retryResponse = await model.generateContent([
+      imagePart,
+      RETRY_PROMPT,
+    ]);
     const retryText = retryResponse.response.text();
     const retryCleaned = stripMarkdownFences(retryText);
 

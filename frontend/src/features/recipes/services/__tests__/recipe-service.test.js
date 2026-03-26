@@ -1,8 +1,4 @@
-import {
-  createRecipe,
-  updateRecipe,
-  deleteRecipe,
-} from '../recipe-service';
+import { createRecipe, updateRecipe, deleteRecipe } from '../recipe-service';
 
 import { addDoc, updateDoc, deleteDoc, collection, doc } from 'firebase/firestore';
 
@@ -33,9 +29,7 @@ describe('recipe-service', () => {
     });
 
     it('should throw when user is not authenticated', async () => {
-      await expect(createRecipe(null, 'Name', {})).rejects.toThrow(
-        'user is not authenticated',
-      );
+      await expect(createRecipe(null, 'Name', {})).rejects.toThrow('user is not authenticated');
     });
 
     it('should use "Anonymous" when author name is empty', async () => {
@@ -49,9 +43,7 @@ describe('recipe-service', () => {
     it('should propagate Firestore errors', async () => {
       addDoc.mockRejectedValue(new Error('Firestore write failed'));
 
-      await expect(createRecipe('uid', 'Name', {})).rejects.toThrow(
-        'Firestore write failed',
-      );
+      await expect(createRecipe('uid', 'Name', {})).rejects.toThrow('Firestore write failed');
     });
   });
 
@@ -61,7 +53,7 @@ describe('recipe-service', () => {
 
       expect(updateDoc).toHaveBeenCalledWith(
         expect.anything(),
-        expect.objectContaining({ title: 'Updated Title' }),
+        expect.objectContaining({ title: 'Updated Title' })
       );
     });
 

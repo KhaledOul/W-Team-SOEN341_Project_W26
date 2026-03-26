@@ -6,9 +6,19 @@
     "dev": "concurrently -n FRONT,BACK -c cyan,green \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
     "install:all": "npm install --prefix frontend && npm install --prefix backend",
     "build": "npm run build --prefix frontend",
-    "start": "npm run start --prefix backend"
+    "start": "npm run start --prefix backend",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives",
+    "lint:fix": "eslint . --ext js,jsx --fix",
+    "format": "prettier --write \"src/**/*.{js,jsx,css}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,css}\""
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@eslint/js": "^9.39.1",
+    "concurrently": "^8.2.2",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "prettier": "^3.8.1"
   }
 }

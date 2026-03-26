@@ -23,7 +23,7 @@ function renderRegister() {
   return render(
     <MemoryRouter>
       <RegisterPage />
-    </MemoryRouter>,
+    </MemoryRouter>
   );
 }
 
@@ -103,7 +103,10 @@ describe('RegisterPage', () => {
   it('should disable submit button while registration is in progress', async () => {
     let resolveRegister;
     mockRegister.mockImplementation(
-      () => new Promise((resolve) => { resolveRegister = resolve; }),
+      () =>
+        new Promise((resolve) => {
+          resolveRegister = resolve;
+        })
     );
     renderRegister();
     const user = userEvent.setup();

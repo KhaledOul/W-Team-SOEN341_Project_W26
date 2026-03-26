@@ -39,7 +39,7 @@ function renderRecipesPage() {
   return render(
     <MemoryRouter>
       <RecipesPage />
-    </MemoryRouter>,
+    </MemoryRouter>
   );
 }
 

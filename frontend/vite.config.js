@@ -23,13 +23,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov', 'html'],
-      exclude: [
-        'node_modules/',
-        'src/test/',
-        'src/main.jsx',
-        'src/firebase.js',
-        '**/*.config.*',
-      ],
+      exclude: ['node_modules/', 'src/test/', 'src/main.jsx', 'src/firebase.js', '**/*.config.*'],
     },
   },
 });

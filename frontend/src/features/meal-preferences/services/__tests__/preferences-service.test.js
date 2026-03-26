@@ -45,7 +45,7 @@ describe('preferences-service', () => {
       expect(setDoc).toHaveBeenCalledWith(
         'mock-doc-ref',
         { diet: ['Keto'], allergies: ['Dairy'] },
-        { merge: true },
+        { merge: true }
       );
     });
   });

@@ -153,7 +153,7 @@ describe('RecipeForm', () => {
           time: 15,
           cost: 5,
           difficulty: 'Easy',
-        }),
+        })
       );
       expect(onClose).toHaveBeenCalled();
     });

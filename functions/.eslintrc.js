@@ -10,9 +10,9 @@ module.exports = {
   rules: {
     "no-restricted-globals": ["error", "name", "length"],
     "prefer-arrow-callback": "error",
-    "quotes": ["error", "double", { allowTemplateLiterals: true }],
+    quotes: ["error", "double", { allowTemplateLiterals: true }],
     "max-len": ["warn", { code: 120 }],
-    "indent": ["error", 2],
+    indent: ["error", 2],
     "object-curly-spacing": ["error", "always"],
     "require-jsdoc": "off",
   },

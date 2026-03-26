@@ -30,7 +30,7 @@ function renderPreferences() {
   return render(
     <MemoryRouter>
       <PreferencesPage />
-    </MemoryRouter>,
+    </MemoryRouter>
   );
 }
 

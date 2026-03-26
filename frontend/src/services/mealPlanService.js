@@ -19,19 +19,6 @@ function mealPlanDocId(userId, isoWeek) {
   return `${userId}_${isoWeek}`;
 }
 
-function extractIsoWeekFromDocId(docId) {
-  // docId format: ${userId}_${isoWeek}
-  // isoWeek format: YYYY-Www
-  // Extract by finding the pattern YYYY-W
-  const match = docId.match(/(\d{4}-W\d{2})/);
-  if (match) {
-    return match[1];
-  }
-  // Fallback: assume last part after underscore
-  const parts = docId.split('_');
-  return parts[parts.length - 1];
-}
-
 function validateInputs(userId, isoWeek) {
   if (typeof userId !== 'string' || userId.trim() === '') {
     throw new Error('userId must be a non-empty string');

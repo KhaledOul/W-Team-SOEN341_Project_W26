@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { AuthProvider, useAuth } from '../auth-context';
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -22,7 +22,7 @@ function renderWithAuth() {
   return render(
     <AuthProvider>
       <AuthConsumer />
-    </AuthProvider>,
+    </AuthProvider>
   );
 }
 

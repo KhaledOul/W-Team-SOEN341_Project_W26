@@ -2,7 +2,6 @@ import {
   doCreateUserWithEmailAndPassword,
   doSignInWithEmailAndPassword,
   doSignOut,
-  doPasswordReset,
 } from '../auth-service';
 
 /* ── Notes ─────────────────────────────────────────────────────────────────── *
@@ -23,11 +22,7 @@ describe('auth-service', () => {
 
     await doCreateUserWithEmailAndPassword('new@example.com', 'pass123');
 
-    expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
-      auth,
-      'new@example.com',
-      'pass123',
-    );
+    expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(auth, 'new@example.com', 'pass123');
   });
 
   it('should call signInWithEmailAndPassword with auth, email, and password', async () => {
@@ -35,18 +30,14 @@ describe('auth-service', () => {
 
     await doSignInWithEmailAndPassword('test@example.com', 'pass');
 
-    expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
-      auth,
-      'test@example.com',
-      'pass',
-    );
+    expect(signInWithEmailAndPassword).toHaveBeenCalledWith(auth, 'test@example.com', 'pass');
   });
 
   it('should propagate error when signIn rejects', async () => {
     signInWithEmailAndPassword.mockRejectedValue(new Error('auth/wrong-password'));
 
     await expect(doSignInWithEmailAndPassword('x@x.com', 'bad')).rejects.toThrow(
-      'auth/wrong-password',
+      'auth/wrong-password'
     );
   });
 

@@ -25,7 +25,7 @@ function renderLogin() {
   return render(
     <MemoryRouter>
       <LoginPage />
-    </MemoryRouter>,
+    </MemoryRouter>
   );
 }
 
@@ -92,7 +92,10 @@ describe('LoginPage', () => {
   it('should disable the submit button while login is in progress', async () => {
     let resolveSignIn;
     mockSignIn.mockImplementation(
-      () => new Promise((resolve) => { resolveSignIn = resolve; }),
+      () =>
+        new Promise((resolve) => {
+          resolveSignIn = resolve;
+        })
     );
     renderLogin();
     const user = userEvent.setup();

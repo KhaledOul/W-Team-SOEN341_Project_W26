@@ -54,13 +54,7 @@ describe('ConfirmationModal', () => {
   });
 
   it('should render with custom button text', () => {
-    render(
-      <ConfirmationModal
-        {...defaultProps}
-        confirmText="Yes, Remove"
-        cancelText="Go Back"
-      />,
-    );
+    render(<ConfirmationModal {...defaultProps} confirmText="Yes, Remove" cancelText="Go Back" />);
 
     expect(screen.getByRole('button', { name: /yes, remove/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument();
