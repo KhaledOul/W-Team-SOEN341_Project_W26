@@ -10,6 +10,7 @@ jobs:
   frontend-tests:
     name: Frontend Tests (Vitest)
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     defaults:
       run:
         working-directory: frontend
