@@ -14,4 +14,22 @@ export default defineConfig({
       },
     },
   },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.js',
+    include: ['src/**/*.{test,spec}.{js,jsx}'],
+    exclude: ['node_modules/', 'tests/'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'lcov', 'html'],
+      exclude: [
+        'node_modules/',
+        'src/test/',
+        'src/main.jsx',
+        'src/firebase.js',
+        '**/*.config.*',
+      ],
+    },
+  },
 });

@@ -7,7 +7,9 @@
     "shell": "firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "test": "jest --coverage",
+    "test:ci": "jest --ci --coverage --forceExit"
   },
   "engines": {
     "node": "18"
@@ -19,8 +21,10 @@
     "firebase-functions": "^5.1.1"
   },
   "devDependencies": {
+    "@jest/globals": "^30.3.0",
     "eslint": "^8.57.1",
-    "eslint-config-google": "^0.14.0"
+    "eslint-config-google": "^0.14.0",
+    "jest": "^30.3.0"
   },
   "private": true
 }
