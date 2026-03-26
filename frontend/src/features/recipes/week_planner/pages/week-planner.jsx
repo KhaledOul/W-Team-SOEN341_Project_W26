@@ -9,7 +9,7 @@ import './week-planner.css';
 
 export default function WeekPlannerPage() {
   const navigate = useNavigate();
-  let { week } = useParams();
+  const { week } = useParams();
   const [currentWeek, setCurrentWeek] = useState(week || getCurrentISOWeek());
   const { mealPlan, loading, error, removeEntry, assignEntry } = useMealPlan(currentWeek);
   const [removalError, setRemovalError] = useState(null);
@@ -17,25 +17,29 @@ export default function WeekPlannerPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
 
-  // Sync URL when week changes
+  // Keep state in sync with URL params
   useEffect(() => {
-    if (!week && currentWeek) {
+    if (week && week !== currentWeek) {
+      setCurrentWeek(week);
+    }
+  }, [week, currentWeek]);
+
+  // Redirect to current week if route doesn't include week
+  useEffect(() => {
+    if (!week) {
       navigate(`/week-planner/${currentWeek}`, { replace: true });
     }
   }, [currentWeek, week, navigate]);
 
   const handlePreviousWeek = () => {
     const prevWeek = addWeeks(currentWeek, -1);
-    setCurrentWeek(prevWeek);
     navigate(`/week-planner/${prevWeek}`);
   };
 
   const handleNextWeek = () => {
     const nextWeek = addWeeks(currentWeek, 1);
-    setCurrentWeek(nextWeek);
     navigate(`/week-planner/${nextWeek}`);
   };
-
   const handleWeekChange = (e) => {
     const selectedWeek = e.target.value;
     setCurrentWeek(selectedWeek);

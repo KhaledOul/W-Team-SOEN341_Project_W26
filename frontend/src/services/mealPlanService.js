@@ -15,6 +15,10 @@ const VALID_DAY_OF_WEEK = new Set([
 
 const VALID_MEAL_TYPES = new Set(['breakfast', 'lunch', 'dinner', 'snack']);
 
+function mealPlanDocId(userId, isoWeek) {
+  return `${userId}_${isoWeek}`;
+}
+
 function extractIsoWeekFromDocId(docId) {
   // docId format: ${userId}_${isoWeek}
   // isoWeek format: YYYY-Www
@@ -113,9 +117,9 @@ export async function getMealPlan(userId, isoWeek) {
 
     const token = await user.getIdToken();
 
-    // ✅ Use GET endpoint to fetch existing meal plan
-    // Backend expects just the isoWeek, it adds userId internally
-    const data = await api.get(`/meal-plans/${encodeURIComponent(isoWeek)}`, token);
+    // Backend stores meal plan doc as userId_isoWeek
+    const docId = mealPlanDocId(userId, isoWeek);
+    const data = await api.get(`/meal-plans/${encodeURIComponent(docId)}`, token);
     return { data, error: null };
   } catch (err) {
     if (import.meta.env.DEV) {
@@ -137,9 +141,9 @@ export async function updateMealEntry(week, entryId, patch) {
     }
 
     const token = await user.getIdToken();
-    const isoWeek = extractIsoWeekFromDocId(week);
+    const docId = week;
     const updatedEntry = await api.patch(
-      `/meal-plans/${encodeURIComponent(isoWeek)}/entries/${encodeURIComponent(entryId)}`,
+      `/meal-plans/${encodeURIComponent(docId)}/entries/${encodeURIComponent(entryId)}`,
       patch,
       token
     );
@@ -165,9 +169,9 @@ export async function deleteMealEntry(week, entryId) {
     }
 
     const token = await user.getIdToken();
-    const isoWeek = extractIsoWeekFromDocId(week);
+    const docId = week;
     await api.delete(
-      `/meal-plans/${encodeURIComponent(isoWeek)}/entries/${encodeURIComponent(entryId)}`,
+      `/meal-plans/${encodeURIComponent(docId)}/entries/${encodeURIComponent(entryId)}`,
       token
     );
 
@@ -200,9 +204,9 @@ export async function assignMealEntry(week, dayOfWeek, mealType, recipeId) {
     }
 
     const token = await user.getIdToken();
-    const isoWeek = extractIsoWeekFromDocId(week);
+    const docId = week;
     const newEntry = await api.post(
-      `/meal-plans/${encodeURIComponent(isoWeek)}/assign`,
+      `/meal-plans/${encodeURIComponent(docId)}/assign`,
       { dayOfWeek, mealType, recipeId },
       token
     );
