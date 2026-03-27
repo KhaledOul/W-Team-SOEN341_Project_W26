@@ -17,12 +17,17 @@ const request = async (method, path, body = null, token = null) => {
 
   const response = await fetch(`${BASE_URL}${path}`, config);
 
+  // Handle 204 No Content explicitly
+  if (response.status === 204) {
+    return null;
+  }
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: response.statusText }));
     throw new Error(error.error || `Request failed with status ${response.status}`);
   }
 
-  return response.json();
+  return response.json().catch(() => null); // Handle empty responses
 };
 
 export const api = {

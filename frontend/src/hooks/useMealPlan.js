@@ -58,6 +58,7 @@ export function useMealPlan(isoWeek) {
   const [mealPlan, setMealPlan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -71,12 +72,13 @@ export function useMealPlan(isoWeek) {
         return;
       }
 
+      setUserId(user.uid);
       setLoading(true);
       setError(null);
       setMealPlan(null);
 
       // First try to get existing meal plan
-      const { data: existingData } = await getMealPlan(user.uid, isoWeek);
+      const { data: existingData, error: getError } = await getMealPlan(user.uid, isoWeek);
 
       if (cancelled) return;
 
@@ -92,9 +94,14 @@ export function useMealPlan(isoWeek) {
       if (cancelled) return;
 
       if (createError) {
+        console.error('[useMealPlan] Failed to create meal plan:', createError);
         setError(createError);
-      } else {
+      } else if (newData) {
+        console.log('[useMealPlan] Meal plan created successfully:', newData);
         setMealPlan(newData);
+      } else {
+        console.error('[useMealPlan] Meal plan creation returned no data');
+        setError('Failed to create meal plan');
       }
 
       setLoading(false);
@@ -138,6 +145,8 @@ export function useMealPlan(isoWeek) {
       return { data: null, error: nextError };
     }
 
+    console.log('[useMealPlan] Attempting to delete entry:', { mealPlanId: mealPlan.id, entryId });
+
     const previousMealPlan = mealPlan;
 
     setError(null);
@@ -146,17 +155,20 @@ export function useMealPlan(isoWeek) {
     const { error: serviceError } = await deleteMealEntryRequest(mealPlan.id, entryId);
 
     if (serviceError) {
+      console.error('[useMealPlan] Failed to delete entry:', serviceError);
       setMealPlan(previousMealPlan);
       setError(serviceError);
       return { data: null, error: serviceError };
     }
 
+    console.log('[useMealPlan] Entry deleted successfully');
     return { data: null, error: null };
   }
 
   async function assignEntry(dayOfWeek, mealType, recipeId) {
     if (!mealPlan?.id) {
       const nextError = 'Meal plan is not loaded';
+      console.error('[useMealPlan] assignEntry failed:', nextError);
       setError(nextError);
       return { data: null, error: nextError };
     }
@@ -175,21 +187,23 @@ export function useMealPlan(isoWeek) {
     const previousMealPlan = mealPlan;
 
     setError(null);
-    // Optimistically add the entry (we'll need recipe data from somewhere)
-    // For now, create a placeholder - you'll need to fetch recipe data
+    // Optimistically add the entry
     const optimisticEntry = {
       id: `temp-${Date.now()}`,
       dayOfWeek,
       mealType,
       recipeId,
-      recipe: { title: 'Loading...', thumbnail: null }, // Placeholder
+      recipe: { title: 'Loading...', thumbnail: null },
     };
+
+    console.log('[useMealPlan] Assigning meal with optimistic entry:', optimisticEntry);
 
     setMealPlan((currentMealPlan) => ({
       ...currentMealPlan,
       entries: [...(currentMealPlan.entries || []), optimisticEntry],
     }));
 
+    // Make API call to assign the meal
     const { data, error: serviceError } = await assignMealEntryRequest(
       mealPlan.id,
       dayOfWeek,
@@ -198,18 +212,37 @@ export function useMealPlan(isoWeek) {
     );
 
     if (serviceError) {
+      console.error('[useMealPlan] assignMealEntryRequest failed:', serviceError);
+      // Revert on error
       setMealPlan(previousMealPlan);
       setError(serviceError);
       return { data: null, error: serviceError };
     }
 
-    // Replace optimistic entry with real data
-    setMealPlan((currentMealPlan) => ({
-      ...currentMealPlan,
-      entries: currentMealPlan.entries.map((entry) =>
-        entry.id === optimisticEntry.id ? data : entry
-      ),
-    }));
+    console.log('[useMealPlan] Entry created on server:', data);
+
+    // API call succeeded, now refetch the entire meal plan to ensure sync
+    if (userId) {
+      console.log('[useMealPlan] Refetching meal plan after assignment...');
+      const { data: freshData, error: fetchError } = await getMealPlan(userId, isoWeek);
+      if (fetchError) {
+        console.error('[useMealPlan] Failed to refetch meal plan:', fetchError);
+        // If refetch fails, at least use the returned data from assignment
+        if (data && data.id) {
+          console.log('[useMealPlan] Using assignment response data directly');
+          setMealPlan((currentMealPlan) => ({
+            ...currentMealPlan,
+            entries: currentMealPlan.entries.map((entry) =>
+              entry.id === optimisticEntry.id ? { ...data } : entry
+            ),
+          }));
+        }
+      } else if (freshData) {
+        // Successfully fetched fresh data from server
+        console.log('[useMealPlan] Meal plan refreshed from server:', freshData);
+        setMealPlan(freshData);
+      }
+    }
 
     return { data, error: null };
   }
