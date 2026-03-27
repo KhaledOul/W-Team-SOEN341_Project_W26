@@ -32,6 +32,36 @@ jobs:
       - name: Install
         run: npm ci
 
+  # ─── Unit Tests (Vitest) ─────────────────────────────────────────────────────
+  unit-tests:
+    name: Unit Tests (Vitest)
+    runs-on: ubuntu-latest
+    needs: install
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - name: Run Vitest
+        run: npm run test:ci
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: frontend/coverage/
+          if-no-files-found: ignore
+
   # ─── Lint (JS/React) ──────────────────────────────────────────────────────
   lint-js:
     name: Lint — React & JS (ESLint)
@@ -104,7 +134,7 @@ jobs:
   build:
     name: Build (Vite)
     runs-on: ubuntu-latest
-    needs: [install, lint-js, lint-css, format]
+    needs: [unit-tests, lint-js, lint-css, format]
     defaults:
       run:
         working-directory: frontend

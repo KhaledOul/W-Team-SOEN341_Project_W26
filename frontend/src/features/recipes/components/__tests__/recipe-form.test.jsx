@@ -167,4 +167,162 @@ describe('RecipeForm', () => {
 
     expect(onClose).toHaveBeenCalled();
   });
+
+  it('should call updateRecipe when editing an existing recipe', async () => {
+    mockGetById.mockReturnValue(mockRecipe);
+    const { onClose } = renderForm({ recipeId: 'recipe-1' });
+    const user = userEvent.setup();
+
+    // Modify the title
+    const titleInput = screen.getByLabelText(/title/i);
+    await user.clear(titleInput);
+    await user.type(titleInput, 'Updated Recipe Title');
+
+    await user.click(screen.getByRole('button', { name: /update recipe/i }));
+
+    await waitFor(() => {
+      expect(mockUpdate).toHaveBeenCalledWith(
+        'recipe-1',
+        expect.objectContaining({ title: 'Updated Recipe Title' })
+      );
+      expect(onClose).toHaveBeenCalled();
+    });
+  });
+
+  it('should validate that author is required on submit', async () => {
+    renderForm();
+    const user = userEvent.setup();
+
+    await user.type(screen.getByLabelText(/title/i), 'Test Recipe');
+    await user.type(screen.getByLabelText(/ingredients/i), 'Some ingredient');
+    await user.type(screen.getByLabelText(/steps/i), 'Step 1');
+    await user.clear(screen.getByLabelText(/time/i));
+    await user.type(screen.getByLabelText(/time/i), '10');
+    await user.clear(screen.getByLabelText(/cost/i));
+    await user.type(screen.getByLabelText(/cost/i), '5');
+
+    await user.click(screen.getByRole('button', { name: /create recipe/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/author is required/i)).toBeInTheDocument();
+    });
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it('should validate that steps are required on submit', async () => {
+    renderForm();
+    const user = userEvent.setup();
+
+    await user.type(screen.getByLabelText(/title/i), 'Test Recipe');
+    await user.type(screen.getByLabelText(/author/i), 'Author');
+    await user.type(screen.getByLabelText(/ingredients/i), 'Some ingredient');
+    await user.clear(screen.getByLabelText(/time/i));
+    await user.type(screen.getByLabelText(/time/i), '10');
+    await user.clear(screen.getByLabelText(/cost/i));
+    await user.type(screen.getByLabelText(/cost/i), '5');
+
+    await user.click(screen.getByRole('button', { name: /create recipe/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/steps are required/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should validate that time must be a valid number', async () => {
+    renderForm();
+    const user = userEvent.setup();
+
+    await user.type(screen.getByLabelText(/title/i), 'Test Recipe');
+    await user.type(screen.getByLabelText(/author/i), 'Author');
+    await user.type(screen.getByLabelText(/ingredients/i), 'Some ingredient');
+    await user.type(screen.getByLabelText(/steps/i), 'Step 1');
+    // Leave time empty - the field starts empty and we don't fill it
+    await user.clear(screen.getByLabelText(/cost/i));
+    await user.type(screen.getByLabelText(/cost/i), '5');
+
+    await user.click(screen.getByRole('button', { name: /create recipe/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/time must be a valid number/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should validate that cost must be a valid positive number', async () => {
+    renderForm();
+    const user = userEvent.setup();
+
+    await user.type(screen.getByLabelText(/title/i), 'Test Recipe');
+    await user.type(screen.getByLabelText(/author/i), 'Author');
+    await user.type(screen.getByLabelText(/ingredients/i), 'Some ingredient');
+    await user.type(screen.getByLabelText(/steps/i), 'Step 1');
+    await user.clear(screen.getByLabelText(/time/i));
+    await user.type(screen.getByLabelText(/time/i), '10');
+    // Leave cost empty - validation checks for empty string
+
+    await user.click(screen.getByRole('button', { name: /create recipe/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/cost must be a valid positive number/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should toggle dietary preference when checkbox is clicked', async () => {
+    renderForm();
+    const user = userEvent.setup();
+
+    const veganCheckbox = screen.getByRole('checkbox', { name: /vegan/i });
+    expect(veganCheckbox).not.toBeChecked();
+
+    await user.click(veganCheckbox);
+    expect(veganCheckbox).toBeChecked();
+
+    await user.click(veganCheckbox);
+    expect(veganCheckbox).not.toBeChecked();
+  });
+
+  it('should toggle allergy when checkbox is clicked', async () => {
+    renderForm();
+    const user = userEvent.setup();
+
+    const peanutsCheckbox = screen.getByRole('checkbox', { name: /peanuts/i });
+    expect(peanutsCheckbox).not.toBeChecked();
+
+    await user.click(peanutsCheckbox);
+    expect(peanutsCheckbox).toBeChecked();
+  });
+
+  it('should call onClose when close button is clicked', async () => {
+    const { onClose } = renderForm();
+    const user = userEvent.setup();
+
+    await user.click(screen.getByText('×'));
+
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  it('should clear error when field is corrected', async () => {
+    renderForm();
+    const user = userEvent.setup();
+
+    // Submit without title to trigger error
+    await user.type(screen.getByLabelText(/author/i), 'Author');
+    await user.type(screen.getByLabelText(/ingredients/i), 'Ingredient');
+    await user.type(screen.getByLabelText(/steps/i), 'Step 1');
+    await user.clear(screen.getByLabelText(/time/i));
+    await user.type(screen.getByLabelText(/time/i), '10');
+    await user.clear(screen.getByLabelText(/cost/i));
+    await user.type(screen.getByLabelText(/cost/i), '5');
+    await user.click(screen.getByRole('button', { name: /create recipe/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/title is required/i)).toBeInTheDocument();
+    });
+
+    // Now type in title - error should clear
+    await user.type(screen.getByLabelText(/title/i), 'Test Recipe');
+
+    await waitFor(() => {
+      expect(screen.queryByText(/title is required/i)).not.toBeInTheDocument();
+    });
+  });
 });

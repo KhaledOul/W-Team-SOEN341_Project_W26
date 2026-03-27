@@ -74,4 +74,53 @@ describe('RecipeCard', () => {
     expect(badge).toBeInTheDocument();
     expect(badge).toHaveClass('hard');
   });
+
+  it('should render allergy tags when present', () => {
+    renderCard({ allergies: ['Peanuts', 'Dairy'] });
+
+    expect(screen.getByText('Peanuts')).toBeInTheDocument();
+    expect(screen.getByText('Dairy')).toBeInTheDocument();
+  });
+
+  it('should call onEdit when "View Full Recipe" button is clicked', async () => {
+    const { onEdit } = renderCard();
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole('button', { name: /view full recipe/i }));
+
+    expect(onEdit).toHaveBeenCalledWith('recipe-1');
+  });
+
+  it('should show "+X more" when ingredients exceed 3 items', () => {
+    renderCard({ ingredients: 'Item 1\nItem 2\nItem 3\nItem 4\nItem 5' });
+
+    expect(screen.getByText('+2 more')).toBeInTheDocument();
+  });
+
+  it('should show "No steps added" when steps are empty', () => {
+    renderCard({ steps: '' });
+
+    expect(screen.getByText('No steps added')).toBeInTheDocument();
+  });
+
+  it('should render "-" when author is not provided', () => {
+    renderCard({ author: undefined, authorName: undefined });
+
+    const metaValues = screen.getAllByText('-');
+    expect(metaValues.length).toBeGreaterThan(0);
+  });
+
+  it('should apply correct difficulty class for easy level', () => {
+    renderCard({ difficulty: 'Easy' });
+
+    const badge = screen.getByText('Easy');
+    expect(badge).toHaveClass('easy');
+  });
+
+  it('should apply correct difficulty class for medium level', () => {
+    renderCard({ difficulty: 'Medium' });
+
+    const badge = screen.getByText('Medium');
+    expect(badge).toHaveClass('medium');
+  });
 });
