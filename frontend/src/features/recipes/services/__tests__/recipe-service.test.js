@@ -1,6 +1,14 @@
 import { createRecipe, updateRecipe, deleteRecipe, subscribeToRecipes } from '../recipe-service';
 
-import { addDoc, updateDoc, deleteDoc, collection, doc, onSnapshot, query } from 'firebase/firestore';
+import {
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  collection,
+  doc,
+  onSnapshot,
+  query,
+} from 'firebase/firestore';
 
 describe('recipe-service', () => {
   beforeEach(() => {
@@ -81,7 +89,7 @@ describe('recipe-service', () => {
   describe('subscribeToRecipes', () => {
     beforeEach(() => {
       query.mockReturnValue('mock-query');
-      onSnapshot.mockImplementation((q, onData, onError) => {
+      onSnapshot.mockImplementation(() => {
         return vi.fn(); // unsubscribe
       });
     });
