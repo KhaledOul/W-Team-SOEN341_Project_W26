@@ -177,3 +177,29 @@ export async function updateMealEntry(week, entryId, patch) {
     return { data: null, error: err.message };
   }
 }
+
+export async function deleteMealEntry(week, entryId) {
+  try {
+    validateMealEntryIdentifiers(week, entryId);
+
+    const user = auth.currentUser;
+
+    if (!user) {
+      throw new Error('User is not authenticated');
+    }
+
+    const token = await user.getIdToken();
+    await api.delete(
+      `/meal-plans/${encodeURIComponent(week)}/entries/${encodeURIComponent(entryId)}`,
+      token
+    );
+
+    return { data: null, error: null };
+  } catch (err) {
+    if (import.meta.env.DEV) {
+      console.error('[mealPlanService] deleteMealEntry failed:', err);
+    }
+
+    return { data: null, error: err.message };
+  }
+}

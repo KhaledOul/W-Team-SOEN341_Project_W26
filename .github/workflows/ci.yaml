@@ -246,3 +246,25 @@ jobs:
           sleep 2
           curl --fail http://localhost:3001/api/health
 
+  backend-unit-tests:
+    name: Backend (unit tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      CI: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend dependencies
+        run: npm ci
+
+      - name: Run backend unit tests
+        run: npm test -- --coverage --ci --runInBand

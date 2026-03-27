@@ -105,4 +105,28 @@ router.patch('/:week/entries/:entryId', verifyToken, async (req, res, next) => {
   }
 });
 
+router.delete('/:week/entries/:entryId', verifyToken, async (req, res, next) => {
+  const { week, entryId } = req.params;
+
+  try {
+    const entryRef = adminDb
+      .collection('mealPlans')
+      .doc(week)
+      .collection('entries')
+      .doc(entryId);
+
+    const existingEntry = await entryRef.get();
+
+    if (!existingEntry.exists) {
+      throw createHttpError(404, 'Meal plan entry not found');
+    }
+
+    await entryRef.delete();
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { auth } from '../services/firebase';
 import {
   createMealPlan,
+  deleteMealEntry as deleteMealEntryRequest,
   updateMealEntry as updateMealEntryRequest,
 } from '../services/mealPlanService';
 
@@ -37,6 +38,17 @@ function applyUpdatedEntry(currentMealPlan, updatedEntry) {
     entries: currentMealPlan.entries.map((entry) =>
       entry.id === updatedEntry.id ? updatedEntry : entry
     ),
+  };
+}
+
+function applyEntryRemoval(currentMealPlan, entryId) {
+  if (!currentMealPlan || !Array.isArray(currentMealPlan.entries)) {
+    return currentMealPlan;
+  }
+
+  return {
+    ...currentMealPlan,
+    entries: currentMealPlan.entries.filter((entry) => entry.id !== entryId),
   };
 }
 
@@ -108,5 +120,28 @@ export function useMealPlan(isoWeek) {
     return { data, error: null };
   }
 
-  return { mealPlan, loading, error, updateEntry };
+  async function deleteEntry(entryId) {
+    if (!mealPlan?.id) {
+      const nextError = 'Meal plan is not loaded';
+      setError(nextError);
+      return { data: null, error: nextError };
+    }
+
+    const previousMealPlan = mealPlan;
+
+    setError(null);
+    setMealPlan((currentMealPlan) => applyEntryRemoval(currentMealPlan, entryId));
+
+    const { error: serviceError } = await deleteMealEntryRequest(mealPlan.id, entryId);
+
+    if (serviceError) {
+      setMealPlan(previousMealPlan);
+      setError(serviceError);
+      return { data: null, error: serviceError };
+    }
+
+    return { data: null, error: null };
+  }
+
+  return { mealPlan, loading, error, updateEntry, deleteEntry };
 }

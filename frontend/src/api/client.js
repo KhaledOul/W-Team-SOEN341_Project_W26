@@ -22,7 +22,12 @@ const request = async (method, path, body = null, token = null) => {
     throw new Error(error.error || `Request failed with status ${response.status}`);
   }
 
-  return response.json();
+  if (response.status === 204) {
+    return null;
+  }
+
+  const responseText = await response.text();
+  return responseText ? JSON.parse(responseText) : null;
 };
 
 export const api = {
