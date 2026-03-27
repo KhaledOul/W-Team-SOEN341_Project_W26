@@ -184,6 +184,17 @@ export function useMealPlan(isoWeek) {
       return { data: null, error: nextError };
     }
 
+    // NEW: Check if this recipe is already in the meal plan (prevent duplicates in the week)
+    const isDuplicateRecipe = mealPlan.entries?.some(
+      (entry) => entry.recipeId === recipeId
+    );
+
+    if (isDuplicateRecipe) {
+      const nextError = 'This recipe is already in this week\'s meal plan. Choose a different recipe.';
+      setError(nextError);
+      return { data: null, error: nextError };
+    }
+
     const previousMealPlan = mealPlan;
 
     setError(null);

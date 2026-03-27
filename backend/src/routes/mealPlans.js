@@ -157,6 +157,18 @@ router.post("/:week/assign", verifyToken, async (req, res, next) => {
       throw createHttpError(409, "Meal slot already occupied");
     }
 
+    // Check if this recipe is already in the meal plan (prevent duplicates for the week)
+    const duplicateQuery = await entriesRef
+      .where("recipeId", "==", recipeId)
+      .get();
+
+    if (!duplicateQuery.empty) {
+      throw createHttpError(
+        409,
+        "This recipe is already in this week's meal plan. Choose a different recipe."
+      );
+    }
+
     // Create new entry
     const newEntry = {
       dayOfWeek,
