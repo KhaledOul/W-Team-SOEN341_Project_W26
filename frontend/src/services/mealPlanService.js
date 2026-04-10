@@ -84,11 +84,11 @@ export async function createMealPlan(userId, isoWeek) {
 
     const token = await user.getIdToken();
 
-    console.log('[mealPlanService] Creating meal plan:', { userId, isoWeek });
+    console.warn('[mealPlanService] Creating meal plan:', { userId, isoWeek });
 
     const data = await api.post('/meal-plans', { isoWeek }, token);
-    
-    console.log('[mealPlanService] Meal plan created:', data);
+
+    console.warn('[mealPlanService] Meal plan created:', data);
     return { data, error: null };
   } catch (err) {
     console.error('[mealPlanService] createMealPlan failed:', err);
@@ -161,15 +161,15 @@ export async function deleteMealEntry(week, entryId) {
 
     const token = await user.getIdToken();
     const docId = week;
-    
-    console.log('[mealPlanService] Deleting entry:', { docId, entryId });
-    
+
+    console.warn('[mealPlanService] Deleting entry:', { docId, entryId });
+
     const response = await api.delete(
       `/meal-plans/${encodeURIComponent(docId)}/entries/${encodeURIComponent(entryId)}`,
       token
     );
-    
-    console.log('[mealPlanService] Delete response:', response);
+
+    console.warn('[mealPlanService] Delete response:', response);
 
     return { data: null, error: null };
   } catch (err) {
@@ -202,16 +202,21 @@ export async function assignMealEntry(week, dayOfWeek, mealType, recipeId) {
 
     const token = await user.getIdToken();
     const docId = week;
-    
-    console.log('[mealPlanService] Assigning meal entry:', { docId, dayOfWeek, mealType, recipeId });
-    
+
+    console.warn('[mealPlanService] Assigning meal entry:', {
+      docId,
+      dayOfWeek,
+      mealType,
+      recipeId,
+    });
+
     const newEntry = await api.post(
       `/meal-plans/${encodeURIComponent(docId)}/assign`,
       { dayOfWeek, mealType, recipeId },
       token
     );
 
-    console.log('[mealPlanService] Assign response:', newEntry);
+    console.warn('[mealPlanService] Assign response:', newEntry);
     return { data: newEntry, error: null };
   } catch (err) {
     console.error('[mealPlanService] assignMealEntry failed:', err);

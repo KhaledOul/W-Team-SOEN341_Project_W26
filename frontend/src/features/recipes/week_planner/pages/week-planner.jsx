@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMealPlan } from '../../../../hooks/useMealPlan';
 import { auth } from '../../../../services/firebase';
@@ -16,13 +16,6 @@ export default function WeekPlannerPage() {
   const [assignmentError, setAssignmentError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
-
-  // Keep state in sync with URL params
-  useEffect(() => {
-    if (week && week !== currentWeek) {
-      setCurrentWeek(week);
-    }
-  }, [week]);
 
   const handlePreviousWeek = () => {
     const prevWeek = addWeeks(currentWeek, -1);

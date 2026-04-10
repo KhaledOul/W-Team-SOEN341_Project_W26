@@ -187,8 +187,7 @@ const ScanMealPage = () => {
                   {generatedRecipe.time} min
                 </span>
                 <span>
-                  <span className="material-icons">attach_money</span>
-                  ${generatedRecipe.cost}
+                  <span className="material-icons">attach_money</span>${generatedRecipe.cost}
                 </span>
                 <span>
                   <span className="material-icons">signal_cellular_alt</span>

@@ -78,7 +78,7 @@ export function useMealPlan(isoWeek) {
       setMealPlan(null);
 
       // First try to get existing meal plan
-      const { data: existingData, error: getError } = await getMealPlan(user.uid, isoWeek);
+      const { data: existingData } = await getMealPlan(user.uid, isoWeek);
 
       if (cancelled) return;
 
@@ -97,7 +97,7 @@ export function useMealPlan(isoWeek) {
         console.error('[useMealPlan] Failed to create meal plan:', createError);
         setError(createError);
       } else if (newData) {
-        console.log('[useMealPlan] Meal plan created successfully:', newData);
+        console.warn('[useMealPlan] Meal plan created successfully:', newData);
         setMealPlan(newData);
       } else {
         console.error('[useMealPlan] Meal plan creation returned no data');
@@ -145,7 +145,7 @@ export function useMealPlan(isoWeek) {
       return { data: null, error: nextError };
     }
 
-    console.log('[useMealPlan] Attempting to delete entry:', { mealPlanId: mealPlan.id, entryId });
+    console.warn('[useMealPlan] Attempting to delete entry:', { mealPlanId: mealPlan.id, entryId });
 
     const previousMealPlan = mealPlan;
 
@@ -161,7 +161,7 @@ export function useMealPlan(isoWeek) {
       return { data: null, error: serviceError };
     }
 
-    console.log('[useMealPlan] Entry deleted successfully');
+    console.warn('[useMealPlan] Entry deleted successfully');
     return { data: null, error: null };
   }
 
@@ -185,12 +185,11 @@ export function useMealPlan(isoWeek) {
     }
 
     // NEW: Check if this recipe is already in the meal plan (prevent duplicates in the week)
-    const isDuplicateRecipe = mealPlan.entries?.some(
-      (entry) => entry.recipeId === recipeId
-    );
+    const isDuplicateRecipe = mealPlan.entries?.some((entry) => entry.recipeId === recipeId);
 
     if (isDuplicateRecipe) {
-      const nextError = 'This recipe is already in this week\'s meal plan. Choose a different recipe.';
+      const nextError =
+        "This recipe is already in this week's meal plan. Choose a different recipe.";
       setError(nextError);
       return { data: null, error: nextError };
     }
@@ -207,7 +206,7 @@ export function useMealPlan(isoWeek) {
       recipe: { title: 'Loading...', thumbnail: null },
     };
 
-    console.log('[useMealPlan] Assigning meal with optimistic entry:', optimisticEntry);
+    console.warn('[useMealPlan] Assigning meal with optimistic entry:', optimisticEntry);
 
     setMealPlan((currentMealPlan) => ({
       ...currentMealPlan,
@@ -230,17 +229,17 @@ export function useMealPlan(isoWeek) {
       return { data: null, error: serviceError };
     }
 
-    console.log('[useMealPlan] Entry created on server:', data);
+    console.warn('[useMealPlan] Entry created on server:', data);
 
     // API call succeeded, now refetch the entire meal plan to ensure sync
     if (userId) {
-      console.log('[useMealPlan] Refetching meal plan after assignment...');
+      console.warn('[useMealPlan] Refetching meal plan after assignment...');
       const { data: freshData, error: fetchError } = await getMealPlan(userId, isoWeek);
       if (fetchError) {
         console.error('[useMealPlan] Failed to refetch meal plan:', fetchError);
         // If refetch fails, at least use the returned data from assignment
         if (data && data.id) {
-          console.log('[useMealPlan] Using assignment response data directly');
+          console.warn('[useMealPlan] Using assignment response data directly');
           setMealPlan((currentMealPlan) => ({
             ...currentMealPlan,
             entries: currentMealPlan.entries.map((entry) =>
@@ -250,7 +249,7 @@ export function useMealPlan(isoWeek) {
         }
       } else if (freshData) {
         // Successfully fetched fresh data from server
-        console.log('[useMealPlan] Meal plan refreshed from server:', freshData);
+        console.warn('[useMealPlan] Meal plan refreshed from server:', freshData);
         setMealPlan(freshData);
       }
     }
