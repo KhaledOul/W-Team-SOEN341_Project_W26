@@ -32,6 +32,6 @@ app.use("/api/meal-plans", mealPlanRoutes);
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.warn(`Backend running on http://localhost:${PORT}`);
+app.listen(PORT, "127.0.0.1", () => {
+  console.warn(`Backend running on http://127.0.0.1:${PORT}`);
 });

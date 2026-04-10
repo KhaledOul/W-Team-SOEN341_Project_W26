@@ -22,22 +22,17 @@ export default function WeekPlannerPage() {
     if (week && week !== currentWeek) {
       setCurrentWeek(week);
     }
-  }, [week, currentWeek]);
-
-  // Redirect to current week if route doesn't include week
-  useEffect(() => {
-    if (!week) {
-      navigate(`/week-planner/${currentWeek}`, { replace: true });
-    }
-  }, [currentWeek, week, navigate]);
+  }, [week]);
 
   const handlePreviousWeek = () => {
     const prevWeek = addWeeks(currentWeek, -1);
+    setCurrentWeek(prevWeek);
     navigate(`/week-planner/${prevWeek}`);
   };
 
   const handleNextWeek = () => {
     const nextWeek = addWeeks(currentWeek, 1);
+    setCurrentWeek(nextWeek);
     navigate(`/week-planner/${nextWeek}`);
   };
   const handleWeekChange = (e) => {

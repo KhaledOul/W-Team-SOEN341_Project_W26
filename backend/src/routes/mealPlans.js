@@ -78,13 +78,26 @@ function buildMealEntryPatch(body) {
   return patch;
 }
 
+function resolveMealPlanDocId(req, week) {
+  if (week.includes("_")) {
+    return week;
+  }
+
+  if (ISO_WEEK_REGEX.test(week) && req.user?.uid) {
+    return `${req.user.uid}_${week}`;
+  }
+
+  return week;
+}
+
 // ── GET /:week ───────────────────────────────────────────────────────────────
 router.get("/:week", verifyToken, async (req, res, next) => {
   const { week } = req.params;
 
   try {
     const adminDb = getAdminDb();
-    const docRef = adminDb.collection("mealPlans").doc(week);
+    const docId = resolveMealPlanDocId(req, week);
+    const docRef = adminDb.collection("mealPlans").doc(docId);
     const snapshot = await docRef.get();
 
     if (!snapshot.exists) {
