@@ -5,6 +5,7 @@ const LandingPage = lazy(() => import('../features/landing/pages/landing-page'))
 const LoginPage = lazy(() => import('../features/auth/pages/login-page'));
 const RegisterPage = lazy(() => import('../features/auth/pages/register-page'));
 const HomePage = lazy(() => import('../features/landing/pages/home-page'));
+const ScanMealPage = lazy(() => import('../features/landing/pages/scan-meal-page'));
 const PreferencesPage = lazy(() => import('../features/meal-preferences/pages/preferences-page'));
 const RecipesPage = lazy(() => import('../features/recipes/pages/recipes-page'));
 const WeekPlannerPage = lazy(() => import('../features/recipes/week_planner/pages/week-planner'));
@@ -34,6 +35,7 @@ export default function AppRouter() {
     { path: '/login', element: <LoginPage /> },
     { path: '/register', element: <RegisterPage /> },
     { path: '/home', element: <HomePage /> },
+    { path: '/scan-meal', element: <ScanMealPage /> },
     { path: '/mealpreferences', element: <PreferencesPage /> },
     { path: '/recipes', element: <RecipesPage /> },
     { path: '/week-planner', element: <WeekPlannerRedirect /> },

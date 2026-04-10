@@ -56,6 +56,15 @@ const HomePage = () => {
             </span>
             Recipes
           </button>
+          <button className="home-btn scan" onClick={() => navigate('/scan-meal')}>
+            <span
+              className="material-icons"
+              style={{ fontSize: '24px', marginRight: 'var(--space-sm)', verticalAlign: 'middle' }}
+            >
+              photo_camera
+            </span>
+            Scan Meal AI
+          </button>
           <button
             className="home-btn shopping"
             onClick={() => navigate(`/week-planner/${getCurrentISOWeek()}`)}
