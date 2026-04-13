@@ -10,6 +10,7 @@ import './week-planner.css';
 export default function WeekPlannerPage() {
   const navigate = useNavigate();
   const { week } = useParams();
+  // Keep local state in sync with the route so week navigation updates both the UI and URL.
   const [currentWeek, setCurrentWeek] = useState(week || getCurrentISOWeek());
   const { mealPlan, loading, error, removeEntry, assignEntry } = useMealPlan(currentWeek);
   const [removalError, setRemovalError] = useState(null);
@@ -48,6 +49,7 @@ export default function WeekPlannerPage() {
   };
 
   const handleAssignRecipe = (dayOfWeek, mealType) => {
+    // Store the chosen slot before opening the modal so the eventual selection knows where to land.
     setSelectedSlot({ dayOfWeek, mealType });
     setIsModalOpen(true);
   };
@@ -57,6 +59,7 @@ export default function WeekPlannerPage() {
 
     try {
       setAssignmentError(null);
+      // Assign by recipe id; the hook handles translating this into a persisted meal-plan entry.
       const result = await assignEntry(selectedSlot.dayOfWeek, selectedSlot.mealType, recipe.id);
 
       if (result.error) {
@@ -97,13 +100,13 @@ export default function WeekPlannerPage() {
             <select
               value={currentWeek}
               onChange={handleWeekChange}
-              className="week-planner__week-select"
-              title="Jump to a specific week"
-            >
-              {/* Generate options for +/- 12 weeks from current */}
-              {Array.from({ length: 25 }).map((_, i) => {
-                const weekOffset = i - 12;
-                const weekOption = addWeeks(getCurrentISOWeek(), weekOffset);
+            className="week-planner__week-select"
+            title="Jump to a specific week"
+          >
+            {/* Offer a moving 25-week window centered on the current ISO week. */}
+            {Array.from({ length: 25 }).map((_, i) => {
+              const weekOffset = i - 12;
+              const weekOption = addWeeks(getCurrentISOWeek(), weekOffset);
                 return (
                   <option key={weekOption} value={weekOption}>
                     {getWeekLabel(weekOption)}

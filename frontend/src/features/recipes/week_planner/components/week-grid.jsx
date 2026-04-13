@@ -4,7 +4,7 @@ const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'S
 const MEAL_TYPES = ['breakfast', 'lunch', 'dinner', 'snack'];
 
 export default function WeekGrid({ entries, onRemoveRecipe, onAssignRecipe, loading }) {
-  // Create a map of entries for quick lookup: key = "dayOfWeek-mealType"
+  // Flatten entries into a slot lookup so each table cell can resolve its recipe in O(1).
   const entryMap = new Map();
   if (entries) {
     entries.forEach((entry) => {
@@ -65,6 +65,7 @@ export default function WeekGrid({ entries, onRemoveRecipe, onAssignRecipe, load
 function EmptyCell({ dayOfWeek, mealType, onAssign }) {
   const handleClick = () => {
     if (onAssign) {
+      // Pass slot metadata upward so the page can open the picker for the correct cell.
       onAssign(dayOfWeek, mealType);
     }
   };
@@ -80,6 +81,7 @@ function EmptyCell({ dayOfWeek, mealType, onAssign }) {
 function GridCell({ entry, onRemove }) {
   const recipe = entry.recipe || {};
   const handleRemove = (e) => {
+    // Prevent the cell click from affecting parent handlers when removing an assignment.
     e.stopPropagation();
     if (onRemove) {
       onRemove(entry.id);

@@ -29,6 +29,7 @@ vi.mock('../../../auth/context/auth-context', () => ({
 function renderPreferences() {
   return render(
     <MemoryRouter>
+      {/* The page navigates with router hooks, so tests need router context. */}
       <PreferencesPage />
     </MemoryRouter>
   );
@@ -39,6 +40,7 @@ function renderPreferences() {
 describe('PreferencesPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Most tests start from a user with no saved preferences and a successful save path.
     mockLoadPrefs.mockResolvedValue(null);
     mockSavePrefs.mockResolvedValue();
   });

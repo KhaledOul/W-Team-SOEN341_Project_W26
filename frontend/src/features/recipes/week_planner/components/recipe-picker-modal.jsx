@@ -14,10 +14,11 @@ export default function RecipePickerModal({ isOpen, onClose, onSelectRecipe, cur
     setLoading(true);
     setError(null);
 
+    // Subscribe only while the modal is visible so recipe data stays fresh without
+    // keeping an unnecessary listener active in the background.
     const unsubscribe = subscribeToRecipes(
       (data) => {
-        // Show all recipes instead of filtering by user
-        // This allows users to see and use all available recipes
+        // The planner lets users assign any available recipe, not just their own.
         if (import.meta.env.DEV) {
           console.warn(
             '[RecipePickerModal] Loaded recipes:',
@@ -39,6 +40,7 @@ export default function RecipePickerModal({ isOpen, onClose, onSelectRecipe, cur
   }, [isOpen, currentUserId]);
 
   const filteredRecipes = recipes.filter((recipe) =>
+    // Support inconsistent recipe shapes while keeping search case-insensitive.
     (recipe.title || recipe.name || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -100,6 +102,7 @@ export default function RecipePickerModal({ isOpen, onClose, onSelectRecipe, cur
 }
 
 function RecipePickerCard({ recipe, onSelect }) {
+  // Normalize legacy/new recipe fields so the picker can render mixed data safely.
   const title = recipe.title || recipe.name || 'Untitled';
   const thumbnail = recipe.thumbnail || recipe.image || null;
   const time = recipe.time || recipe.preparationTime || '';

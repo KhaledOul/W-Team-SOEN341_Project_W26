@@ -30,6 +30,7 @@ const PreferencesPage = () => {
       try {
         setUserName(currentUser.displayName || currentUser.email?.split('@')[0] || 'User');
 
+        // Seed the form from persisted preferences so returning users can edit in place.
         const data = await preferencesService.loadPreferences(currentUser.uid);
 
         if (data) {
@@ -73,6 +74,7 @@ const PreferencesPage = () => {
   const handleSave = () => {
     if (!currentUser) return;
 
+    // Capture the current selections so failed saves can roll the UI back consistently.
     const dietSnapshot = [...selectedDiet];
     const allergySnapshot = [...selectedAllergies];
 
@@ -91,11 +93,13 @@ const PreferencesPage = () => {
       })
       .catch((error) => {
         console.error('Error saving preferences:', error);
+        // Restore the last known persisted state instead of leaving unsaved UI selections visible.
         setSelectedDiet(lastSavedDiet.current);
         setSelectedAllergies(lastSavedAllergies.current);
         setSaveStatus('error');
       })
       .finally(() => {
+        // Auto-dismiss transient save feedback after the snackbar has been visible briefly.
         setSaving(false);
         setTimeout(() => setSaveStatus(null), 2000);
       });

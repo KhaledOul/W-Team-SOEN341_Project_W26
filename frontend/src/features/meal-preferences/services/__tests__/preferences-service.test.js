@@ -4,6 +4,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 describe('preferences-service', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Reuse a stable mock document reference so each assertion can focus on Firestore calls.
     doc.mockReturnValue('mock-doc-ref');
   });
 

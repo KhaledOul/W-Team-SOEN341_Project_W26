@@ -26,6 +26,7 @@ function renderModal(props = {}) {
     currentUserId: 'test-uid',
   };
   return {
+    // Return the handlers so assertions can use either the defaults or per-test overrides.
     ...render(<RecipePickerModal {...defaultProps} {...props} />),
     onClose: props.onClose ?? defaultProps.onClose,
     onSelectRecipe: props.onSelectRecipe ?? defaultProps.onSelectRecipe,
@@ -37,6 +38,7 @@ function renderModal(props = {}) {
 describe('RecipePickerModal', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Default most tests to an immediate successful subscription with fixture data.
     recipeService.subscribeToRecipes.mockImplementation((onData) => {
       onData(mockRecipes);
       return vi.fn(); // unsubscribe
