@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useRecipe } from '../context/recipe-context';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import ConfirmationModal from '../components/confirmation-modal';
 import RecipeCard from '../components/recipe-card';
 import RecipeForm from '../components/recipe-form';
-import ConfirmationModal from '../components/confirmation-modal';
+import { useRecipe } from '../context/recipe-context';
 import './recipes-page.css';
 
 export default function RecipesPage() {
@@ -110,9 +110,9 @@ export default function RecipesPage() {
   const activeFilterCount =
     filters.diet.length +
     filters.allergies.length +
-    (filters.sortByCost !== 'none' ? 1 : 0) +
-    (filters.timeMin !== '' ? 1 : 0) +
-    (filters.timeMax !== '' ? 1 : 0);
+    (filters.sortByCost === 'none' ? 0 : 1) +
+    (filters.timeMin === '' ? 0 : 1) +
+    (filters.timeMax === '' ? 0 : 1);
 
   if (loading) {
     return (
