@@ -14,7 +14,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "firebase-admin": "^13.7.0"
+    "firebase-admin": "^13.7.0",
+    "w-team-soen341": "file:.."
   },
   "devDependencies": {
     "eslint": "^9.39.1",

@@ -41,14 +41,15 @@ function validateMealEntryIdentifiers(week, entryId) {
   }
 }
 
+const ALLOWED_MEAL_ENTRY_PATCH_FIELDS = new Set(['dayOfWeek', 'mealType']);
+
 function validateMealEntryPatch(patch) {
   if (!patch || typeof patch !== 'object' || Array.isArray(patch)) {
     throw new Error('Patch body must be a JSON object');
   }
 
-  const allowedFields = ['dayOfWeek', 'mealType'];
   const patchKeys = Object.keys(patch);
-  const unknownFields = patchKeys.filter((field) => !allowedFields.includes(field));
+  const unknownFields = patchKeys.filter((field) => !ALLOWED_MEAL_ENTRY_PATCH_FIELDS.has(field));
 
   if (unknownFields.length > 0) {
     throw new Error(`Unknown field(s): ${unknownFields.join(', ')}`);
