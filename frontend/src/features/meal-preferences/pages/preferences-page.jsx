@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/context/auth-context';
 import * as preferencesService from '../services/preferences-service';
@@ -168,7 +168,7 @@ const PreferencesPage = () => {
           <div className="snackbar snackbar--success">
             <span className="material-icons" style={{ fontSize: '18px' }}>
               check_circle
-            </span>
+            </span>{' '}
             Saved
           </div>
         )}
@@ -176,7 +176,7 @@ const PreferencesPage = () => {
           <div className="snackbar snackbar--error">
             <span className="material-icons" style={{ fontSize: '18px' }}>
               error
-            </span>
+            </span>{' '}
             Save failed. Changes reverted.
           </div>
         )}
@@ -184,7 +184,7 @@ const PreferencesPage = () => {
           <div className="snackbar snackbar--error">
             <span className="material-icons" style={{ fontSize: '18px' }}>
               error
-            </span>
+            </span>{' '}
             Failed to load preferences. Please refresh.
           </div>
         )}
