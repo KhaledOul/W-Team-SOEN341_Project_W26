@@ -1,4 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import React, { useContext, useEffect, useState } from 'react';
 import { useAuth } from '../../auth/context/auth-context';
 import * as recipeService from '../services/recipe-service';
 
@@ -94,3 +95,7 @@ export function RecipeProvider({ children }) {
 
   return <RecipeContext.Provider value={value}>{children}</RecipeContext.Provider>;
 }
+
+RecipeProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
